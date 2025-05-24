@@ -1,5 +1,6 @@
 import torch
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from PIL import Image, ImageDraw, ImageFont
 import torchvision
 from torchvision import transforms
@@ -9,6 +10,7 @@ import os
 
 # Inisialisasi Flask
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 # Label yang akan digunakan
 LABELS = {
@@ -118,8 +120,15 @@ def predict_image():
         output_image_path = os.path.join("static", f"predicted_{img_filename}")
         image_with_boxes.save(output_image_path)
 
-        # Render template dengan img_path dan detected_labels untuk menampilkan gambar hasil prediksi dan label
-        return render_template("index.html", img_path=f"predicted_{img_filename}", detected_labels=detected_labels)
+        # Check if the request wants JSON or HTML
+        if request.headers.get('Accept') == 'application/json':
+            return jsonify({
+                "img_path": f"predicted_{img_filename}",
+                "detected_labels": detected_labels
+            })
+        else:
+            # Render template with img_path and detected_labels for the HTML version
+            return render_template("index.html", img_path=f"predicted_{img_filename}", detected_labels=detected_labels)
 
 # Jalankan Flask
 if __name__ == "__main__":
