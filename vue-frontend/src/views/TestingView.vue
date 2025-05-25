@@ -1,27 +1,69 @@
 <template>
   <div class="testing-page">
-    <div class="breadcrumbs">
+    <div class="hero-banner">
       <div class="container">
-        <div class="breadcrumbs-content">
-          <h2>Testing Page</h2>
-          <nav>
-            <ol>
-              <li><router-link to="/">Home</router-link></li>
-              <li>Testing Page</li>
-            </ol>
-          </nav>
+        <div class="hero-content" data-aos="fade-up">
+          <h1 class="page-title">Skin Tone Detection</h1>
+          <p class="subtitle">Unggah foto untuk mendeteksi warna kulit Anda dengan teknologi AI</p>
         </div>
+      </div>
+      <div class="wave-shape">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+          <path fill="#fff" fill-opacity="1" d="M0,192L48,202.7C96,213,192,235,288,229.3C384,224,480,192,576,176C672,160,768,160,864,176C960,192,1056,224,1152,234.7C1248,245,1344,235,1392,229.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
       </div>
     </div>
 
     <section class="testing-section">
       <div class="container">
+        <div class="section-header" data-aos="fade-up">
+          <h2 class="section-title">Analisis Warna Kulit</h2>
+          <p class="section-description">Unggah gambar wajah Anda untuk mendapatkan analisis warna kulit yang akurat</p>
+        </div>
+
         <div class="row">
-          <div class="col">
+          <div class="col" data-aos="fade-right" data-aos-delay="100">
             <ImageUploader @upload="handleImageUpload" />
           </div>
-          <div class="col">
+          <div class="col" data-aos="fade-left" data-aos-delay="200">
             <ResultsDisplay :result="result" :loading="isLoading" />
+          </div>
+        </div>
+
+        <div class="info-box" data-aos="fade-up" data-aos-delay="300">
+          <div class="info-icon">ℹ️</div>
+          <div class="info-content">
+            <h3>Cara Kerja</h3>
+            <p>
+              Sistem kami menggunakan Artificial Intelligence untuk menganalisis warna kulit Anda dan memberikan hasil yang akurat.
+              Pastikan foto diambil dengan pencahayaan yang baik untuk mendapatkan hasil terbaik.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="benefits-section" data-aos="fade-up">
+      <div class="container">
+        <h2 class="section-title">Keunggulan FineYourTone</h2>
+        
+        <div class="benefits-grid">
+          <div class="benefit-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="benefit-icon">🔍</div>
+            <h3>Akurat</h3>
+            <p>Teknologi AI memberikan hasil analisis warna kulit yang akurat</p>
+          </div>
+          
+          <div class="benefit-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="benefit-icon">⚡</div>
+            <h3>Cepat</h3>
+            <p>Proses analisis hanya membutuhkan waktu beberapa detik</p>
+          </div>
+          
+          <div class="benefit-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="benefit-icon">📱</div>
+            <h3>Responsif</h3>
+            <p>Dapat digunakan dengan nyaman di perangkat mobile maupun desktop</p>
           </div>
         </div>
       </div>
@@ -72,85 +114,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.testing-page {
-  padding-top: 80px;
-}
-
-.breadcrumbs {
-  background-color: #f8f9fa;
-  padding: 20px 0;
-  margin-bottom: 40px;
-}
-
-.breadcrumbs-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.breadcrumbs h2 {
-  margin: 0;
-  font-size: 28px;
-  color: #333;
-}
-
-.breadcrumbs ol {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.breadcrumbs li {
-  display: inline-block;
-}
-
-.breadcrumbs li + li::before {
-  content: '/';
-  padding: 0 10px;
-  color: #6c757d;
-}
-
-.breadcrumbs a {
-  color: #0ea2bd;
-  text-decoration: none;
-}
-
-.testing-section {
-  padding: 20px 0 60px;
-}
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  margin: -15px;
-}
-
-.col {
-  flex: 1;
-  padding: 15px;
-  min-width: 300px;
-}
-
-@media (max-width: 768px) {
-  .row {
-    flex-direction: column;
-  }
-  
-  .breadcrumbs-content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .breadcrumbs h2 {
-    margin-bottom: 10px;
-  }
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-</style>
+<!-- CSS dipindahkan ke style.css -->
