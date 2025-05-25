@@ -24,9 +24,9 @@ const routes = [
     component: () => import('@/views/AboutUs.vue')
   },
   {
-    path: '/contact',
-    name: 'contact',
-    component: () => import('@/views/ContactUs.vue')
+    path: '/feedback',
+    name: 'feedback',
+    component: () => import('@/views/Feedback.vue')
   },
   // Redirect all unmatched routes to home
   {

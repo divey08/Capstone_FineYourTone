@@ -18,7 +18,7 @@
           <li><router-link to="/testing">Testing</router-link></li>
           <li><router-link to="/explore-undertone">Explore Undertone</router-link></li>
           <li><router-link to="/about">About Us</router-link></li>
-          <li><router-link to="/contact">Contact Us</router-link></li>
+          <li><router-link to="/feedback">Feedback</router-link></li>
         </ul>
         <button class="menu-toggle" @click="toggleMobileMenu">
           <span></span>
@@ -34,7 +34,7 @@
         <li><router-link to="/testing" @click="closeMobileMenu">Detection</router-link></li>
         <li><router-link to="/explore-undertone" @click="closeMobileMenu">Explore Undertone</router-link></li>
         <li><router-link to="/about" @click="closeMobileMenu">About Us</router-link></li>
-        <li><router-link to="/contact" @click="closeMobileMenu">Contact Us</router-link></li>
+        <li><router-link to="/feedback" @click="closeMobileMenu">Feedback</router-link></li>
       </ul>
     </div>
   </header>
