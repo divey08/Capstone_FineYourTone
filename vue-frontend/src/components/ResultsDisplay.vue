@@ -39,9 +39,10 @@
                   </li>
                 </transition-group>
               </div>
-              
-              <div class="recommendation-box" v-if="primarySkinTone">
-                <div class="recommendation-icon">💡</div>
+                <div class="recommendation-box" v-if="primarySkinTone">
+                <div class="recommendation-icon">
+                  <i class="fas fa-lightbulb"></i>
+                </div>
                 <div class="recommendation-content">
                   <h4>Rekomendasi Tone</h4>
                   <p>Berdasarkan analisis, tone kulit Anda adalah <strong>{{ primarySkinTone }}</strong>.</p>
@@ -134,23 +135,50 @@ export default {
 }
 
 .card {
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
   overflow: hidden;
   height: 100%;
-  background-color: var(--background-white);
-  transition: transform 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.95);
+  transition: all 0.4s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(50, 50, 93, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
-  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-  padding: 20px;
+  background: linear-gradient(120deg, var(--accent) 0%, var(--primary) 100%);
+  padding: 25px 20px;
   text-align: center;
   color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-header:before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  transform: rotate(30deg);
+  animation: resultsHeaderShine 8s infinite linear;
+}
+
+@keyframes resultsHeaderShine {
+  0% { transform: translateX(-100%) rotate(30deg); }
+  100% { transform: translateX(100%) rotate(30deg); }
 }
 
 .card-header h4 {
@@ -165,9 +193,10 @@ export default {
   flex-direction: column;
   align-items: center;
   min-height: 400px;
+  background: linear-gradient(180deg, rgba(248, 249, 250, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%);
 }
 
-/* Loading animation */
+/* Loading animation improved */
 .loading {
   display: flex;
   flex-direction: column;
@@ -175,50 +204,78 @@ export default {
   justify-content: center;
   height: 100%;
   width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.loading:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(52, 152, 219, 0.03) 0%, rgba(255, 255, 255, 0) 70%);
+  z-index: -1;
+  transform-origin: center;
+  will-change: transform;
+  animation: pulseBackgroundOptimized 3s infinite alternate ease-in-out;
+}
+
+@keyframes pulseBackgroundOptimized {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.2); opacity: 0.8; }
 }
 
 .loading-animation {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  transform-origin: center bottom;
+  animation: slight-bounce 2s infinite ease-in-out;
+}
+
+@keyframes slight-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 .circle {
   width: 15px;
   height: 15px;
-  margin: 0 5px;
-  background-color: var(--primary-color);
+  margin: 0 8px;
+  background-color: var(--accent);
   border-radius: 50%;
   animation: bounce 1.5s infinite ease-in-out both;
+  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
 }
 
 .circle:nth-child(1) {
   animation-delay: -0.3s;
-  background-color: var(--primary-color);
+  background: linear-gradient(135deg, var(--accent-light), var(--accent));
 }
 
 .circle:nth-child(2) {
   animation-delay: -0.15s;
-  background-color: var(--secondary-color);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
 }
 
 .circle:nth-child(3) {
-  background-color: var(--accent-color);
-}
-
-@keyframes bounce {
-  0%, 80%, 100% {
-    transform: scale(0);
-  }
-  40% {
-    transform: scale(1);
-  }
+  animation-delay: 0s;
+  background: linear-gradient(135deg, var(--accent-light), var(--primary));
 }
 
 .processing-text {
-  font-size: 16px;
-  color: var(--text-light);
+  font-size: 1.1rem;
+  color: var(--accent);
   font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  animation: fadeInOut 2s infinite alternate;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0.7; }
+  100% { opacity: 1; }
 }
 
 /* Results content */
@@ -246,25 +303,79 @@ export default {
   border-radius: 3px;
 }
 
+/* Improved Result Image Container */
 .result-image-container {
-  margin: 20px 0;
-  max-width: 100%;
+  margin: 25px 0;
+  border-radius: 15px;
   overflow: hidden;
-  border-radius: var(--border-radius);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   position: relative;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  border: 5px solid white;
+  background: white;
+  max-width: 100%;
+  will-change: transform;
+}
+
+.result-image-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.result-image-container:before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  z-index: -1;
+  background: linear-gradient(135deg, var(--accent-light) 0%, transparent 50%, var(--accent) 100%);
+  border-radius: 20px;
+  opacity: 0.2;
+  filter: blur(10px);
+  /* Animasi statis di mobile, berputar di desktop */
+  animation: pulseGradient 3s ease-in-out infinite;
+}
+
+@media (min-width: 768px) {
+  .result-image-container:before {
+    animation: pulseGradient 3s ease-in-out infinite, rotateGradientDesktop 12s linear infinite;
+  }
+}
+
+@keyframes pulseGradient {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes rotateGradientDesktop {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .result-image {
   width: 100%;
   max-width: 300px;
+  height: auto;
   display: block;
   transform: scale(1);
-  transition: transform 0.5s ease;
+  transition: transform 0.3s ease;
+  will-change: transform;
 }
 
 .result-image:hover {
-  transform: scale(1.02);
+  transform: scale(1.03);
+}
+
+@media (max-width: 768px) {
+  .result-image {
+    max-width: 100%;
+  }
+  
+  .result-image:hover {
+    transform: none; /* Tidak ada efek hover pada mobile */
+  }
 }
 
 /* Labels styles */
@@ -293,18 +404,31 @@ export default {
 }
 
 .label-item {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   transform-origin: left;
-  transition: all 0.4s;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  will-change: transform, opacity;
 }
 
 .label-content {
   display: flex;
   align-items: center;
   padding: 10px 15px;
-  background-color: rgba(249, 249, 249, 0.8);
+  background-color: rgba(249, 249, 249, 0.7);
   border-radius: 30px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  transition: background-color 0.3s ease;
+}
+
+.label-content:hover {
+  background-color: rgba(249, 249, 249, 0.9);
+}
+
+@media (max-width: 480px) {
+  .label-content {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+  }
 }
 
 .label-name {
@@ -315,11 +439,26 @@ export default {
 
 .progress-container {
   flex-grow: 1;
-  height: 10px;
+  height: 8px;
   background-color: #e9ecef;
   border-radius: 5px;
   overflow: hidden;
   margin: 0 15px;
+  will-change: width; /* Optimasi untuk animasi width */
+}
+
+@media (max-width: 480px) {
+  .label-name {
+    min-width: auto;
+    width: 100%;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  
+  .progress-container {
+    margin: 5px 10px 5px 0;
+    height: 6px;
+  }
 }
 
 .progress-bar {
@@ -339,20 +478,71 @@ export default {
 .recommendation-box {
   margin-top: 30px;
   display: flex;
-  padding: 15px 20px;
-  background: linear-gradient(135deg, rgba(14, 162, 189, 0.1), rgba(85, 82, 238, 0.1));
-  border-radius: var(--border-radius);
-  border-left: 4px solid var(--primary-color);
-  animation: fadeIn 1s ease-in-out;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.06) 0%, rgba(44, 62, 80, 0.04) 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.8s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(52, 152, 219, 0.1);
+  will-change: transform, opacity;
+}
+
+.recommendation-box:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: linear-gradient(to bottom, var(--accent), var(--accent-light));
+}
+
+@media (max-width: 480px) {
+  .recommendation-box {
+    padding: 15px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .recommendation-box:before {
+    height: 4px;
+    width: 100%;
+    background: linear-gradient(to right, var(--accent), var(--accent-light));
+  }
 }
 
 .recommendation-icon {
   font-size: 24px;
   margin-right: 15px;
+  min-width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(52, 152, 219, 0.08);
+  border-radius: 50%;
+  color: var(--accent);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.15);
+  transition: all 0.3s ease;
+}
+
+.recommendation-box:hover .recommendation-icon {
+  transform: scale(1.05);
+  background: rgba(52, 152, 219, 0.12);
 }
 
 .recommendation-content {
   flex-grow: 1;
+}
+
+@media (max-width: 480px) {
+  .recommendation-icon {
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
 }
 
 .recommendation-content h4 {
@@ -414,38 +604,59 @@ export default {
 /* Animations */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  will-change: opacity, transform;
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(15px);
 }
 
 .list-enter-active,
 .list-leave-active {
-  transition: all 0.5s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  will-change: opacity, transform;
 }
 
 .list-enter-from {
   opacity: 0;
-  transform: translateX(-20px);
+  transform: translateX(-15px);
 }
 
 .list-leave-to {
   opacity: 0;
-  transform: translateX(20px);
+  transform: translateX(15px);
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(15px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Kurangi atau nonaktifkan animasi untuk pengguna yang menyetel preferensi reduced motion */
+  .fade-enter-active,
+  .fade-leave-active,
+  .list-enter-active,
+  .list-leave-active,
+  .result-image-container:before,
+  .recommendation-box,
+  .loading:before {
+    transition-duration: 0.1s;
+    animation-duration: 0.1s;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 }
 </style>
