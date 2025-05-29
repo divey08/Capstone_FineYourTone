@@ -13,7 +13,7 @@
             <i class="fas fa-palette logo-icon"></i>
             <span>FineYour<span class="gradient-text">Tone</span></span>
           </div>
-          <p class="footer-desc">Skin Tone &amp; Undertone Detection powered by AI.<br>Capstone Project Dicoding Camp &mdash; Supported by DBS Foundation.</p>
+          <p class="footer-desc">Skin Tone &amp; Undertone Detection.<br>Capstone Project Dicoding Camp &mdash; Supported by DBS Foundation.</p>
           
           <div class="social-links">
             <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
