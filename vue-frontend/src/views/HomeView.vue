@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="hero-content">
           <h1>FineYour<span>Tone</span></h1>
-          <p class="hero-tagline">Skin Tone Detection dengan teknologi AI untuk membantu Anda menentukan warna kulit yang tepat</p>
+          <p class="hero-tagline">Skin Tone Detection yang memudahkan Anda mengenali warna kulit secara akurat</p>
           <div class="hero-buttons">
             <router-link to="/testing" class="btn-primary"><i class="fas fa-camera"></i> Coba Sekarang</router-link>
             <router-link to="/explore-undertone" class="btn-secondary"><i class="fas fa-info-circle"></i> Pelajari Lebih Lanjut</router-link>
@@ -44,11 +44,12 @@
           </div>
         </div>
       </div>
-    </section>    <section class="usage-section">
+    </section>    
+    <section class="usage-section">
       <div class="container-fluid">
         <div class="section-header">
           <h2 class="section-title">Cara Penggunaan</h2>
-          <p class="section-subtitle">Tiga langkah mudah untuk mengetahui tone kulit Anda dengan tepat</p>
+          <p class="section-subtitle">Tiga langkah mudah untuk mengetahui tone kulit Anda</p>
         </div>
         <div class="steps">
           <div class="step" data-aos="fade-up" data-aos-delay="100">
