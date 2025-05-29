@@ -24,7 +24,7 @@
               <i class="fas fa-camera-retro"></i>
             </div>
             <h3>Deteksi Akurat</h3>
-            <p>Menggunakan teknologi AI untuk mendeteksi warna kulit dengan akurasi tinggi, memberikan hasil yang dapat diandalkan setiap saat</p>
+            <p>Teknologi deteksi warna kulit yang akurat dan terpercaya untuk hasil yang konsisten setiap saat</p>
           </div>
           
           <div class="feature-card">
@@ -40,7 +40,7 @@
               <i class="fas fa-star"></i>
             </div>
             <h3>Rekomendasi Produk</h3>
-            <p>Dapatkan rekomendasi produk kosmetik yang paling cocok sesuai dengan warna kulit Anda</p>
+            <p>Dapatkan rekomendasi warna yang paling cocok sesuai dengan warna kulit Anda</p>
           </div>
         </div>
       </div>
