@@ -95,24 +95,7 @@
       </div>
     </section>
 
-    <section class="testimonials-section">
-      <h2>Apa Kata Pengguna Lain</h2>
-      <div class="testimonials-grid">
-        <div 
-          v-for="(testimonial, index) in testimonials" 
-          :key="index"
-          class="testimonial-card"
-          data-aos="fade-up"
-          :data-aos-delay="index * 100"
-        >
-          <div class="testimonial-rating">
-            <span v-for="star in 5" :key="star" :class="{ 'active': testimonial.rating >= star }">★</span>
-          </div>
-          <p class="testimonial-text">"{{ testimonial.message }}"</p>
-          <p class="testimonial-name">- {{ testimonial.name }}</p>
-        </div>
-      </div>
-    </section>
+   
   </div>
 </template>
 
@@ -133,9 +116,7 @@ export default {
       isSubmitting: false,
       submitted: false,
       testimonials: [
-        { name: 'Rina', rating: 5, message: 'Aplikasi ini sangat membantu saya menemukan foundation yang cocok!' },
-        { name: 'Budi', rating: 4, message: 'Deteksi warna kulit sangat akurat, saya jadi tahu undertone saya.' },
-        { name: 'Anisa', rating: 5, message: 'Rekomendasi produk kecantikan sangat sesuai dengan tone kulit saya.' }
+       
       ]
     }
   },
@@ -146,8 +127,7 @@ export default {
       this.userFeedbacks = JSON.parse(savedFeedbacks);
     }
   },
-  methods: {
-    submitFeedback() {
+  methods: {    submitFeedback() {
       this.isSubmitting = true;
       
       // Simpan feedback baru
@@ -165,14 +145,22 @@ export default {
       
       // Simulasi pengiriman ke server
       setTimeout(() => {
-        // Tambahkan ke array userFeedbacks
-        this.userFeedbacks.unshift(newFeedbackItem);
+        // Tambahkan ke array userFeedbacks di akhir array
+        this.userFeedbacks.push(newFeedbackItem);
         
         // Simpan ke localStorage
         localStorage.setItem('userFeedbacks', JSON.stringify(this.userFeedbacks));
         
         this.isSubmitting = false;
         this.submitted = true;
+        
+        // Scroll ke bagian feedback terbaru
+        this.$nextTick(() => {
+          const feedbackSection = document.querySelector('.user-feedbacks-section');
+          if (feedbackSection) {
+            feedbackSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
       }, 1500);
     },
     resetForm() {
@@ -190,4 +178,232 @@ export default {
 }
 </script>
 
-<!-- CSS dipindahkan ke style.css -->
+<style scoped>
+.feedback.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 160px 20px 60px;
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+.page-title {
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  margin-top: -40px;
+  color: #333;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.feedback-form-container {
+  max-width: 800px;
+  margin: 0 auto 50px;
+  padding: 40px;
+  background: #ffffff;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+}
+
+.star-rating {
+  display: flex;
+  gap: 5px;
+  font-size: 1.5rem;
+}
+
+.star {
+  cursor: pointer;
+  color: #ddd;
+}
+
+.star.active {
+  color: #f47a9e;
+}
+
+.submit-button {
+  background: linear-gradient(135deg, #f47a9e, #f6bdd9);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.success-message {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.success-icon {
+  color: #f47a9e;
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.reset-button {
+  background: white;
+  color: #f47a9e;
+  border: 1px solid #f47a9e;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.user-feedbacks-section {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.user-feedbacks-section h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.user-feedbacks-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.feedback-card {
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+  background: #ffffff;
+}
+
+.feedback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.feedback-category {
+  color: #f47a9e;
+  font-size: 0.9rem;
+}
+
+.feedback-rating {
+  margin: 10px 0;
+}
+
+.feedback-message {
+  color: #444;
+  line-height: 1.6;
+  margin: 15px 0;
+}
+
+.feedback-date {
+  color: #888;
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.testimonials-section {
+  padding: 40px 20px;
+  background: #fff;
+}
+
+.testimonials-section h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.testimonials-grid {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.testimonial-card {
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+  background: #ffffff;
+}
+
+.testimonial-rating {
+  margin-bottom: 10px;
+}
+
+.testimonial-text {
+  color: #444;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+
+.testimonial-name {
+  color: #666;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .feedback.container {
+    padding: 140px 15px 40px;
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    margin-top: -30px;
+  }
+
+  .feedback-form-container {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .feedback.container {
+    padding: 120px 10px 30px;
+  }
+
+  .page-title {
+    font-size: 2rem;
+    margin-top: -20px;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+}
+</style>

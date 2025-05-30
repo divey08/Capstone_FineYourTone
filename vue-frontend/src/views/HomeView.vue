@@ -291,37 +291,64 @@ export default {
 }
 
 @media (max-width: 768px) {
+  .hero-section {
+    padding: 60px 0;
+    background-attachment: scroll;
+  }
+
+  .hero-content {
+    padding: 30px 20px;
+  }
+
   .hero-content h1 {
-    font-size: 3.5rem;
-  }
-
-  .hero-tagline {
-    font-size: 1.2rem;
-  }
-
-  .btn-primary, .btn-secondary {
-    padding: 14px 28px;
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-content h1 {
-    font-size: 2.8rem;
+    font-size: 3rem;
+    margin-bottom: 1rem;
   }
 
   .hero-tagline {
     font-size: 1.1rem;
+    margin-bottom: 2rem;
+    padding: 0 15px;
+  }
+
+  .hero-buttons {
+    gap: 15px;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 14px 24px;
+    font-size: 1rem;
+    width: auto;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content {
+    padding: 25px 15px;
+  }
+
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-tagline {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
   }
 
   .hero-buttons {
     flex-direction: column;
-    align-items: stretch;
-    padding: 0 20px;
+    align-items: center;
+    gap: 12px;
   }
 
   .btn-primary, .btn-secondary {
+    width: 100%;
+    max-width: 280px;
     justify-content: center;
+    padding: 12px 20px;
   }
 }
 
