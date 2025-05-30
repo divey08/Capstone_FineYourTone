@@ -429,57 +429,34 @@ export default {
 }
 
 .card {
-  border-radius: 20px;
-  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+  border-radius: 25px;
+  box-shadow: 0 15px 35px rgba(244, 122, 158, 0.1);
   overflow: hidden;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: white;
   transition: all 0.4s ease;
   position: relative;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(244, 122, 158, 0.1);
 }
 
 .card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(50, 50, 93, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(244, 122, 158, 0.15);
 }
 
 .card-header {
-  background: linear-gradient(120deg, var(--accent) 0%, var(--accent-light) 100%);
+  background: linear-gradient(135deg, #ffffff, #ffffff);
   padding: 25px 20px;
   text-align: center;
   color: white;
-  border-bottom: none;
   position: relative;
   overflow: hidden;
-}
-
-.card-header:before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 0.1),
-    rgba(255, 255, 255, 0)
-  );
-  transform: rotate(30deg);
-  animation: headerShine 8s infinite linear;
-}
-
-@keyframes headerShine {
-  0% { transform: translateX(-100%) rotate(30deg); }
-  100% { transform: translateX(100%) rotate(30deg); }
 }
 
 .card-header h4 {
   margin: 0;
   font-weight: 700;
   font-size: 22px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .card-body {
@@ -500,8 +477,8 @@ export default {
 .upload-area {
   width: 280px;
   height: 280px;
-  border: 2px dashed var(--accent-light);
-  border-radius: 16px;
+  border: 2px dashed rgba(244, 122, 158, 0.3);
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -509,20 +486,18 @@ export default {
   overflow: hidden;
   position: relative;
   transition: all 0.3s ease;
-  background: linear-gradient(120deg, rgba(52, 152, 219, 0.05) 0%, rgba(93, 173, 226, 0.1) 100%);
-  box-shadow: inset 0 0 20px rgba(52, 152, 219, 0.05);
+  background: linear-gradient(135deg, rgba(244, 122, 158, 0.05), rgba(246, 189, 217, 0.05));
 }
 
 .upload-area:hover {
-  border-color: var(--accent);
-  background: linear-gradient(120deg, rgba(52, 152, 219, 0.08) 0%, rgba(93, 173, 226, 0.15) 100%);
+  border-color: #f47a9e;
+  background: linear-gradient(135deg, rgba(244, 122, 158, 0.08), rgba(246, 189, 217, 0.08));
   transform: scale(1.02);
 }
 
 .upload-area.active {
-  border-color: var(--accent);
-  background: linear-gradient(120deg, rgba(52, 152, 219, 0.1) 0%, rgba(93, 173, 226, 0.2) 100%);
-  box-shadow: inset 0 0 30px rgba(52, 152, 219, 0.1), 0 5px 15px rgba(52, 152, 219, 0.1);
+  border-color: #f47a9e;
+  background: linear-gradient(135deg, rgba(244, 122, 158, 0.1), rgba(246, 189, 217, 0.1));
 }
 
 .upload-area.has-image {
@@ -578,12 +553,12 @@ export default {
 }
 
 .upload-icon {
-  color: var(--primary-color);
+  color: #f47a9e;
   margin-bottom: 15px;
 }
 
 .upload-icon svg {
-  filter: drop-shadow(0 4px 6px rgba(52, 152, 219, 0.3));
+  filter: drop-shadow(0 4px 6px rgba(244, 122, 158, 0.3));
   animation: float 3s ease-in-out infinite;
 }
 
@@ -608,7 +583,7 @@ export default {
   align-items: center;
   justify-content: center;
   width: 200px;
-  background: linear-gradient(120deg, var(--accent) 0%, var(--accent-light) 100%);
+  background: linear-gradient(135deg, #f47a9e, #f6bdd9);
   color: white;
   border: none;
   padding: 14px 28px;
@@ -617,29 +592,12 @@ export default {
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
-  position: relative;
-  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(244, 122, 158, 0.3);
 }
 
 .submit-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 25px rgba(52, 152, 219, 0.4);
-}
-
-.submit-btn:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  transition: left 0.7s;
-}
-
-.submit-btn:hover:before {
-  left: 100%;
+  box-shadow: 0 12px 25px rgba(244, 122, 158, 0.4);
 }
 
 .submit-btn:disabled {
@@ -750,7 +708,7 @@ export default {
 
 .camera-header {
   padding: 20px;
-  background: linear-gradient(120deg, var(--accent) 0%, var(--accent-light) 100%);
+  background: linear-gradient(135deg, #f47a9e, #f6bdd9);
   color: white;
   display: flex;
   justify-content: space-between;
@@ -830,9 +788,9 @@ export default {
 .camera-loader {
   width: 40px;
   height: 40px;
-  border: 4px solid rgba(52, 152, 219, 0.3);
+  border: 4px solid rgba(244, 122, 158, 0.3);
   border-radius: 50%;
-  border-top-color: var(--accent);
+  border-top-color: #f47a9e;
   animation: spin 1s linear infinite;
   margin-bottom: 15px;
 }
@@ -890,7 +848,7 @@ export default {
 }
 
 .camera-btn {
-  background: linear-gradient(120deg, var(--accent) 0%, var(--accent-light) 100%);
+  background: linear-gradient(135deg, #f47a9e, #f6bdd9);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -902,12 +860,12 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+  box-shadow: 0 5px 15px rgba(244, 122, 158, 0.3);
 }
 
 .camera-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+  box-shadow: 0 8px 20px rgba(244, 122, 158, 0.4);
 }
 
 /* Media queries untuk responsivitas */
@@ -1013,7 +971,7 @@ export default {
 }
 
 .retry-btn {
-  background: var(--accent);
+  background: #f47a9e;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -1027,7 +985,7 @@ export default {
 }
 
 .retry-btn:hover {
-  background: var(--accent-light);
+  background: #f6bdd9;
   transform: translateY(-3px);
 }
 

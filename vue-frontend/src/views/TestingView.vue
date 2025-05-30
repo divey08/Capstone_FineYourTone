@@ -1,12 +1,14 @@
-<template>  <div class="testing-page">
-    <div class="hero-banner modern-gradient">
+<template>
+  <div class="testing-page">
+    <div class="hero-banner">
+      <div class="overlay"></div>
       <div class="container">
         <div class="hero-content" data-aos="fade-up">
           <div class="hero-icon">
             <i class="fas fa-camera-retro"></i>
           </div>
           <h1 class="page-title">Skin Tone Detection</h1>
-          <p class="subtitle">Unggah foto untuk mendeteksi warna kulit Anda</p>
+          <p class="subtitle">Kenali warna kulit Anda dengan mengunggah foto.</p>
           <div class="hero-action">
             <a href="#upload-section" class="hero-btn">
               <i class="fas fa-angle-down"></i>
@@ -14,39 +16,38 @@
           </div>
         </div>
       </div>
-      <div class="wave-shape">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-          <path fill="#fff" fill-opacity="1" d="M0,192L48,202.7C96,213,192,235,288,229.3C384,224,480,192,576,176C672,160,768,160,864,176C960,192,1056,224,1152,234.7C1248,245,1344,235,1392,229.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-        </svg>
-      </div>
-    </div>    <section id="upload-section" class="testing-section">
+    </div>
+
+    <section id="upload-section" class="testing-section">
       <div class="container">
         <div class="section-header" data-aos="fade-up">
           <h2 class="section-title"><i class="fas fa-palette"></i> Analisis Warna Kulit</h2>
           <p class="section-description">Unggah gambar wajah Anda untuk mendapatkan analisis warna kulit yang akurat</p>
         </div>
 
-        <div class="row">
-          <div class="col" data-aos="fade-right" data-aos-delay="100">
+        <div class="upload-container">
+          <div class="upload-box" data-aos="fade-right" data-aos-delay="100">
             <ImageUploader @upload="handleImageUpload" />
           </div>
-          <div class="col" data-aos="fade-left" data-aos-delay="200">
+          <div class="result-box" data-aos="fade-left" data-aos-delay="200">
             <ResultsDisplay :result="result" :loading="isLoading" />
           </div>
-        </div>        <div class="info-box" data-aos="fade-up" data-aos-delay="300">
+        </div>
+
+        <div class="info-box" data-aos="fade-up" data-aos-delay="300">
           <div class="info-icon">
             <i class="fas fa-info-circle"></i>
           </div>
           <div class="info-content">
             <h3>Cara Kerja</h3>
-            <p>
-            Sistem kami dirancang untuk menganalisis warna kulit Anda dan memberikan hasil yang akurat.
-            Pastikan foto diambil dengan pencahayaan yang baik untuk mendapatkan hasil terbaik.
-           </p>
+            <p>Sistem kami dirancang untuk menganalisis warna kulit Anda dan memberikan hasil yang akurat.
+              Pastikan foto diambil dengan pencahayaan yang baik untuk mendapatkan hasil terbaik.</p>
           </div>
         </div>
       </div>
-    </section>    <section class="benefits-section" data-aos="fade-up">
+    </section>
+
+    <section class="benefits-section" data-aos="fade-up">
       <div class="container">
         <h2 class="section-title"><i class="fas fa-award"></i> Keunggulan FineYourTone</h2>
         
@@ -123,4 +124,360 @@ export default {
 }
 </script>
 
-<!-- CSS dipindahkan ke style.css -->
+<style scoped>
+.testing-page {
+  min-height: 100vh;
+}
+
+.hero-banner {  background: url('/img/kegunaan 3.jpg') center/cover no-repeat;
+  padding: 120px 0 80px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.8));
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-icon {
+  font-size: 3.5rem;
+  margin-bottom: 2rem;
+  animation: float 3s ease-in-out infinite;
+  color: #333;
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+}
+
+.page-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  font-family: 'Playfair Display', serif;
+  color: #333;
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+}
+
+.subtitle {
+  font-size: 1.4rem;
+  opacity: 0.95;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+  color: #444;
+  text-shadow: 0 1px 8px rgba(255, 255, 255, 0.3);
+}
+
+.hero-btn {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-size: 1.2rem;
+}
+
+.hero-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  background: white;
+  color: #333;
+}
+
+.testing-section {
+  background: #fff;
+  padding: 80px 0;
+  position: relative;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+}
+
+.section-header::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(45deg, #f47a9e, #f6bdd9);
+  border-radius: 3px;
+}
+
+.section-title {
+  font-size: 2.2rem;
+  color: #333;
+  margin-bottom: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.section-title i {
+  color: #f47a9e;
+  margin-right: 10px;
+}
+
+.section-description {
+  color: #666;
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.upload-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
+  margin: 2rem auto;
+  max-width: 1200px;
+  padding: 0 1rem;
+}
+
+.upload-box, .result-box {
+  background: white;
+  border-radius: 25px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(244, 122, 158, 0.08);
+  transition: all 0.4s ease;
+  border: 1px solid rgba(244, 122, 158, 0.1);
+}
+
+.upload-box:hover, .result-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(244, 122, 158, 0.12);
+  border-color: rgba(244, 122, 158, 0.2);
+}
+
+.info-box {
+  background: white;
+  border-radius: 25px;
+  padding: 2.5rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  margin: 3rem auto;
+  max-width: 1000px;
+  box-shadow: 0 10px 30px rgba(244, 122, 158, 0.08);
+  border: 1px solid rgba(244, 122, 158, 0.1);
+  transition: all 0.4s ease;
+}
+
+.info-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(244, 122, 158, 0.12);
+}
+
+.info-icon {
+  font-size: 3rem;
+  color: #454243;
+  flex-shrink: 0;
+}
+
+.info-content h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+.info-content p {
+  color: #666;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+.benefits-section {
+  padding: 100px 0;
+  background: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.benefits-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(45deg, rgba(244, 122, 158, 0.03), rgba(246, 189, 217, 0.05));
+  pointer-events: none;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  margin-top: 4rem;
+  padding: 0 1rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.benefit-card {
+  background: white;
+  border-radius: 25px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  transition: all 0.4s ease;
+  position: relative;
+  border: 1px solid rgba(244, 122, 158, 0.1);
+  box-shadow: 0 10px 30px rgba(244, 122, 158, 0.08);
+}
+
+.benefit-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(244, 122, 158, 0.12);
+  border-color: rgba(244, 122, 158, 0.2);
+}
+
+.benefit-icon {
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  background: linear-gradient(135deg, #f47a9e, #f6bdd9);
+  border-radius: 50%;
+  margin: 0 auto 2rem;
+  color: white;
+  font-size: 1.8rem;
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.benefit-card:hover .benefit-icon {
+  transform: scale(1.1);
+  box-shadow: 0 10px 25px rgba(244, 122, 158, 0.2);
+}
+
+.benefit-card h3 {
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.benefit-card p {
+  color: #666;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .hero-banner {
+    padding: 80px 0 60px;
+  }
+
+  .hero-content {
+    padding: 1rem;
+  }
+
+  .page-title {
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .testing-section {
+    padding: 60px 0;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .section-description {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .upload-container {
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+
+  .upload-box, .result-box, .info-box {
+    padding: 1.8rem;
+  }
+
+  .info-box {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+    margin: 2rem 1rem;
+  }
+
+  .info-content h3 {
+    font-size: 1.5rem;
+  }
+
+  .info-content p {
+    font-size: 1rem;
+  }
+
+  .benefits-grid {
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .benefit-card {
+    padding: 1.8rem 1.5rem;
+  }
+
+  .benefit-icon {
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .benefit-card h3 {
+    font-size: 1.3rem;
+  }
+
+  .benefit-card p {
+    font-size: 1rem;
+  }
+}
+</style>
