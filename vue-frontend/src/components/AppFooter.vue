@@ -1,25 +1,29 @@
 <template>
   <footer class="footer">
-    <div class="footer-wave">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-        <path fill="currentColor" fill-opacity="1" d="M0,128L48,144C96,160,192,192,288,186.7C384,181,480,139,576,144C672,149,768,203,864,208C960,213,1056,171,1152,144C1248,117,1344,107,1392,101.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-      </svg>
-    </div>
-    
-    <div class="footer-content">
+      <div class="footer-content">
       <div class="footer-container container-fluid">
         <div class="footer-brand">
           <div class="footer-logo">
-            <i class="fas fa-palette logo-icon"></i>
-            <span>FineYour<span class="gradient-text">Tone</span></span>
+            <div class="logo-wrapper">
+              <i class="fas fa-palette logo-icon"></i>
+              <div class="logo-circles">
+                <span class="circle"></span>
+                <span class="circle"></span>
+                <span class="circle"></span>
+              </div>
+            </div>
+            <div class="logo-text">
+              <span class="fine">Fine<span class="your">Your</span></span>
+              <span class="tone">Tone</span>
+            </div>
           </div>
           <p class="footer-desc">Skin Tone &amp; Undertone Detection.<br>Capstone Project Dicoding Camp &mdash; Supported by DBS Foundation.</p>
           
           <div class="social-links">
-            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+            <a href="#" class="social-link instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-link linkedin"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="social-link github"><i class="fab fa-github"></i></a>
           </div>
         </div>
         
