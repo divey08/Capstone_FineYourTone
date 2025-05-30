@@ -7,10 +7,20 @@ from torchvision import transforms
 from torchvision.models.detection import FasterRCNN
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 import os
+from models import db, Feedback
 
 # Inisialisasi Flask
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+
+# Database configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///feedback.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+
+# Create tables
+with app.app_context():
+    db.create_all()
 
 # Label yang akan digunakan
 LABELS = {
@@ -129,6 +139,28 @@ def predict_image():
         else:
             # Render template with img_path and detected_labels for the HTML version
             return render_template("index.html", img_path=f"predicted_{img_filename}", detected_labels=detected_labels)
+
+@app.route("/api/feedback", methods=['GET', 'POST'])
+def handle_feedback():
+    if request.method == 'POST':
+        try:
+            data = request.json
+            feedback = Feedback(
+                name=data['name'],
+                email=data['email'],
+                rating=data['rating'],
+                category=data['category'],
+                message=data['message']
+            )
+            db.session.add(feedback)
+            db.session.commit()
+            return jsonify(feedback.to_dict()), 201
+        except Exception as e:
+            return jsonify({'error': str(e)}), 400
+            
+    # GET method
+    feedbacks = Feedback.query.order_by(Feedback.date.desc()).all()
+    return jsonify([f.to_dict() for f in feedbacks])
 
 # Jalankan Flask
 if __name__ == "__main__":

@@ -3,6 +3,10 @@
     <h1 class="page-title">Feedback</h1>
     <p class="subtitle">Bantu kami meningkatkan FineYourTone dengan masukan Anda</p>
 
+    <div v-if="error" class="error-message" data-aos="fade-in">
+      {{ error }}
+    </div>
+
     <div class="feedback-form-container" data-aos="fade-up">
       <form @submit.prevent="submitFeedback" class="feedback-form" v-if="!submitted">
         <div class="form-group">
@@ -66,9 +70,14 @@
       </div>
     </div>
 
-    <section class="user-feedbacks-section" v-if="userFeedbacks.length > 0">
+    <section class="user-feedbacks-section" v-if="userFeedbacks.length > 0 || isLoading">
       <h2>Feedback Pengguna</h2>
-      <div class="user-feedbacks-grid">
+      
+      <div v-if="isLoading" class="loading-spinner">
+        Loading...
+      </div>
+
+      <div v-else class="user-feedbacks-grid">
         <div 
           v-for="(feedback, index) in userFeedbacks" 
           :key="index"
@@ -101,59 +110,74 @@
 
 <script>
 export default {
-  name: 'Feedback',
-  data() {
+  name: 'Feedback',  data() {
     return {
       newFeedback: {
         name: '',
         email: '',
         rating: 0,
         category: '',
-        message: '',
-        date: ''
+        message: ''
       },
       userFeedbacks: [],
       isSubmitting: false,
       submitted: false,
-      testimonials: [
-       
-      ]
+      error: null,
+      isLoading: false
     }
-  },
-  mounted() {
-    // Load feedback dari localStorage jika ada
-    const savedFeedbacks = localStorage.getItem('userFeedbacks');
-    if (savedFeedbacks) {
-      this.userFeedbacks = JSON.parse(savedFeedbacks);
-    }
-  },
-  methods: {    submitFeedback() {
+  },  mounted() {
+    this.loadFeedbacks();
+  },  methods: {    async loadFeedbacks() {
+      this.isLoading = true;
+      this.error = null;
+      try {
+        const response = await fetch('http://localhost:5000/api/feedback');
+        if (!response.ok) {
+          throw new Error('Failed to load feedback data');
+        }
+        const data = await response.json();
+        this.userFeedbacks = data;
+      } catch (error) {
+        console.error('Error loading feedbacks:', error);
+        this.error = 'Gagal memuat data feedback. Silakan coba lagi.';
+      } finally {
+        this.isLoading = false;
+      }
+    },    async submitFeedback() {
+      if (this.newFeedback.rating === 0) {
+        this.error = 'Silakan berikan rating terlebih dahulu';
+        return;
+      }
+      
       this.isSubmitting = true;
+      this.error = null;
       
-      // Simpan feedback baru
-      const newFeedbackItem = { ...this.newFeedback };
-      
-      // Tambahkan tanggal
-      const now = new Date();
-      newFeedbackItem.date = now.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-      
-      // Simulasi pengiriman ke server
-      setTimeout(() => {
-        // Tambahkan ke array userFeedbacks di akhir array
-        this.userFeedbacks.push(newFeedbackItem);
+      try {
+        const response = await fetch('http://localhost:5000/api/feedback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: this.newFeedback.name,
+            email: this.newFeedback.email,
+            rating: this.newFeedback.rating,
+            category: this.newFeedback.category,
+            message: this.newFeedback.message
+          })
+        });
+
+        const data = await response.json();
         
-        // Simpan ke localStorage
-        localStorage.setItem('userFeedbacks', JSON.stringify(this.userFeedbacks));
-        
+        if (!response.ok) {
+          throw new Error(data.error || 'Gagal mengirim feedback');
+        }
+
+        // Add the new feedback to the list and show success
+        this.userFeedbacks.unshift(data);
         this.isSubmitting = false;
         this.submitted = true;
-        
+
         // Scroll ke bagian feedback terbaru
         this.$nextTick(() => {
           const feedbackSection = document.querySelector('.user-feedbacks-section');
@@ -161,17 +185,20 @@ export default {
             feedbackSection.scrollIntoView({ behavior: 'smooth' });
           }
         });
-      }, 1500);
-    },
-    resetForm() {
+      } catch (error) {
+        console.error('Error submitting feedback:', error);
+        this.isSubmitting = false;
+        this.error = 'Gagal mengirim feedback. Silakan coba lagi.';
+      }
+    },    resetForm() {
       this.newFeedback = {
         name: '',
         email: '',
         rating: 0,
         category: '',
-        message: '',
-        date: ''
+        message: ''
       };
+      this.error = null;
       this.submitted = false;
     }
   }
@@ -335,6 +362,39 @@ export default {
   color: #888;
   font-size: 0.9rem;
   text-align: right;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-family: 'Poppins', sans-serif;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 800px;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Apply Poppins font to existing elements */
+.feedback.container,
+.page-title,
+.subtitle,
+.form-group label,
+.form-group input,
+.form-group select,
+.form-group textarea,
+.submit-button,
+.success-message,
+.reset-button,
+.feedback-card {
+  font-family: 'Poppins', sans-serif;
 }
 
 .testimonials-section {

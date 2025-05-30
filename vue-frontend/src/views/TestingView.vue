@@ -9,11 +9,6 @@
           </div>
           <h1 class="page-title">Skin Tone Detection</h1>
           <p class="subtitle">Kenali warna kulit Anda dengan mengunggah foto.</p>
-          <div class="hero-action">
-            <a href="#upload-section" class="hero-btn">
-              <i class="fas fa-angle-down"></i>
-            </a>
-          </div>
         </div>
       </div>
     </div>
@@ -129,14 +124,16 @@ export default {
   min-height: 100vh;
 }
 
-.hero-banner {  background: url('/img/kegunaan 3.jpg') center/cover no-repeat;
-  padding: 120px 0 80px;
+.hero-banner {  
+  background: url('/img/kegunaan 3.jpg') center/cover no-repeat;
+  padding: 150px 0 80px; /* Menambah padding untuk memperpanjang foto */
   position: relative;
   overflow: hidden;
   text-align: center;
-  min-height: 500px;
+  min-height: 650px; /* Memperbesar tinggi minimum */
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .overlay {
@@ -155,6 +152,11 @@ export default {
   padding: 2rem;
   max-width: 800px;
   margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero-icon {
@@ -178,36 +180,19 @@ export default {
   font-size: 1.4rem;
   opacity: 0.95;
   max-width: 600px;
-  margin: 0 auto 2rem;
+  margin: 0 auto;
   line-height: 1.6;
   color: #444;
   text-shadow: 0 1px 8px rgba(255, 255, 255, 0.3);
 }
 
-.hero-btn {
-  display: inline-block;
-  background: rgba(255, 255, 255, 0.9);
-  color: #333;
-  width: 60px;
-  height: 60px;
-  line-height: 60px;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  font-size: 1.2rem;
-}
-
-.hero-btn:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  background: white;
-  color: #333;
-}
+/* Removed hero-btn styles as the button has been removed */
 
 .testing-section {
   background: #fff;
   padding: 80px 0;
   position: relative;
+  margin-top: 0;
 }
 
 .section-header {
@@ -273,7 +258,7 @@ export default {
 }
 
 .info-box {
-  background: white;
+  background: linear-gradient(135deg, #f47a9e, #f6bdd9);
   border-radius: 25px;
   padding: 2.5rem;
   color: #333;
@@ -294,7 +279,7 @@ export default {
 
 .info-icon {
   font-size: 3rem;
-  color: #454243;
+  color: #ffffff;
   flex-shrink: 0;
 }
 
@@ -302,11 +287,11 @@ export default {
   font-size: 1.8rem;
   margin-bottom: 1rem;
   font-family: 'Poppins', sans-serif;
-  color: #333;
+  color: #ffffff;
 }
 
 .info-content p {
-  color: #666;
+  color: #ffffff;
   line-height: 1.6;
   font-size: 1.1rem;
 }
@@ -396,7 +381,8 @@ export default {
 
 @media (max-width: 768px) {
   .hero-banner {
-    padding: 80px 0 60px;
+    padding: 80px 0; /* Tetap berikan padding bawah pada mobile */
+    min-height: 550px; /* Atur tinggi minimum untuk mobile */
   }
 
   .hero-content {
@@ -416,9 +402,7 @@ export default {
   .hero-icon {
     font-size: 2.5rem;
     margin-bottom: 1.5rem;
-  }
-
-  .testing-section {
+  }  .testing-section {
     padding: 60px 0;
   }
 
