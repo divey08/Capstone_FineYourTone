@@ -50,7 +50,7 @@ body {
   justify-content: flex-start;
   background: var(--bg-light);
   color: var(--text-dark);
-  font-family: var(--body-font);
+  font-family:
 }
 
 body::before, body::after {
