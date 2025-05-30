@@ -1,11 +1,6 @@
-<template>
-  <header 
+<template>  <header 
     class="header" 
     :class="{ 'scrolled': scrolled }"
-    v-bind:style="{ 
-      backgroundColor: headerBgColor,
-      boxShadow: headerShadow
-    }"
   >    
     <div class="container-fluid header-container">
       <router-link to="/" class="logo" data-aos="fade-right">
@@ -77,23 +72,11 @@ export default {
 
     onUnmounted(() => {
       window.removeEventListener('scroll', handleScroll);
-    });
-
-    const headerBgColor = computed(() => {
-      return scrolled.value ? 'rgba(255, 255, 255, 0.98)' : 'rgba(255, 255, 255, 0.9)';
-    });
-
-    const headerShadow = computed(() => {
-      return scrolled.value ? '0 10px 30px rgba(0, 0, 0, 0.1)' : 'none';
-    });
-
-    return {
+    });    return {
       scrolled,
       mobileMenuOpen,
       toggleMobileMenu,
-      closeMobileMenu,
-      headerBgColor,
-      headerShadow
+      closeMobileMenu
     };
   }
 }
@@ -105,19 +88,19 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 20px 0;
+  padding: 15px 0;
   z-index: 1000;
   transition: all 0.4s ease;
   backdrop-filter: blur(16px);
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .header.scrolled {
-  padding: 15px 0;
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 12px 0;
+  background-color: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .container-fluid {
@@ -133,8 +116,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  /* Menghapus background dan box-shadow di sini untuk menghindari tampilan bertumpuk */
 }
 
 .logo {
@@ -146,6 +128,8 @@ export default {
   font-size: 1.8rem;
   margin: 0;
   color: #333;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .gradient-text {
@@ -154,6 +138,8 @@ export default {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 700;
+  position: relative;
+  display: inline-block;
 }
 
 .logo-icon {
@@ -265,9 +251,18 @@ export default {
 .navbar a.main-feature {
   background: linear-gradient(45deg, #f47a9e, #f6bdd9);
   color: white !important;
+  box-shadow: 0 4px 12px rgba(244, 122, 158, 0.25);
+  border: none;
+  padding: 10px 20px;
+  transition: all 0.3s ease;
   i {
     color: white !important;
   }
+}
+
+.navbar a.main-feature:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(244, 122, 158, 0.35);
 }
 
 /* Feature Badge - Removed as requested */
@@ -311,20 +306,21 @@ export default {
 
 .mobile-menu {
   position: fixed;
-  top: 80px;
+  top: 70px; /* Adjusted to match the shorter header */
   left: 0;
   width: 100%;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 70px);
   background: rgba(255, 255, 255, 0.98);
   transform: translateX(-100%);
   opacity: 0;
   z-index: 999;
   transition: all 0.3s ease-in-out;
   padding: 20px 0;
-  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.08);
   visibility: hidden;
   display: flex;
   align-items: center;
+  backdrop-filter: blur(10px);
 }
 
 .mobile-menu-open {
