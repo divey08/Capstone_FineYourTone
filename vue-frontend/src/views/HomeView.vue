@@ -25,8 +25,8 @@
                 <i class="fas fa-microscope"></i>
               </div>
             </div>
-            <h3>Deteksi AI Akurat</h3>
-            <p>Menggunakan model AI Faster R-CNN yang akurat dan terpercaya untuk hasil analisis yang konsisten</p>
+            <h3>Deteksi Akurat</h3>
+            <p>Menggunakan sistem deteksi yang akurat dan terpercaya untuk memberikan hasil analisis yang konsisten.</p>
             <div class="feature-hover">
               <i class="fas fa-check-circle"></i>
               <span>99% Akurat</span>
@@ -39,8 +39,8 @@
                 <i class="fas fa-bolt"></i>
               </div>
             </div>
-            <h3>Proses Instan</h3>
-            <p>Hasil analisis warna kulit dalam hitungan detik dengan teknologi machine learning canggih</p>
+            <h3>Proses Cepat</h3>
+            <p>Dapatkan hasil analisis warna kulit secara cepat tanpa perlu menunggu lama.</p>
             <div class="feature-hover">
               <i class="fas fa-clock"></i>
               <span>< 2 Detik</span>
@@ -54,7 +54,7 @@
               </div>
             </div>
             <h3>Rekomendasi Produk</h3>
-            <p>Dapatkan rekomendasi makeup dan skincare yang paling sesuai dengan warna kulit Anda</p>
+            <p>Dapatkan rekomendasi warna yang paling sesuai dengan warna kulit Anda.</p>
             <div class="feature-hover">
               <i class="fas fa-thumbs-up"></i>
               <span>100% Sesuai</span>
@@ -108,11 +108,11 @@
               <div class="step-number">2</div>
             </div>
             <div class="usage-content">
-              <h3>Analisis AI</h3>
+              <h3>Analisis</h3>
               <div class="usage-image-container">
                 <img src="/img/kegunaan 2.jpg" alt="Processing" class="usage-image" />
               </div>
-              <p>Algoritma AI kami akan menganalisis warna kulit Anda dengan akurat dalam hitungan detik</p>
+             <p>Proses analisis warna kulit dilakukan secara cepat dan akurat untuk memberikan hasil terbaik.</p>
             </div>
           </div>
           
@@ -128,7 +128,7 @@
               <div class="usage-image-container">
                 <img src="/img/kegunaan 3.jpg" alt="Results" class="usage-image" />
               </div>
-              <p>Dapatkan hasil analisis warna kulit dan rekomendasi produk yang sesuai dengan tone kulit Anda</p>
+              <p>Dapatkan hasil analisis warna kulit beserta rekomendasi warna yang sesuai dengan tone kulit Anda.</p>
             </div>
           </div>
         </div>
@@ -140,7 +140,7 @@
         <div class="cta-container">
           <div class="cta-content">
             <h2>Mulai Mendeteksi Tone Kulit Anda</h2>
-            <p>Temukan pilihan makeup dan skincare yang tepat untuk warna kulit Anda</p>
+            <p>Temukan rekomendasi warna yang paling sesuai dengan warna kulit Anda.</p>
             <div class="cta-buttons">
               <router-link to="/testing" class="cta-button primary">
                 <i class="fas fa-camera"></i> Deteksi Sekarang
@@ -168,6 +168,163 @@ export default {
 </script>
 
 <style scoped>
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 100px 0;
+  overflow: hidden;  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/img/beauty.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.hero-content {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(0);
+  animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 4.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(45deg, #ffffff, #ffd1e1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  position: relative;
+  letter-spacing: 2px;
+  text-transform: none;
+  text-shadow: none;
+}
+
+.hero-content h1 span {
+  background: linear-gradient(45deg, #ffd1e1, #f47a9e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+
+.hero-tagline {
+  font-size: 1.4rem;
+  color: #ffffff;
+  margin-bottom: 2.8rem;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 16px 32px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #f47a9e, #f6bdd9);
+  color: white;
+  border: none;
+  box-shadow: 0 10px 20px rgba(244, 122, 158, 0.2);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  background: linear-gradient(135deg, #f6bdd9, #f47a9e);
+  box-shadow: 0 15px 30px rgba(244, 122, 158, 0.3);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.95);
+  color: #f47a9e;
+  border: none;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary:hover {
+  background: white;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.hero-overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 3.5rem;
+  }
+
+  .hero-tagline {
+    font-size: 1.2rem;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 14px 28px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2.8rem;
+  }
+
+  .hero-tagline {
+    font-size: 1.1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 20px;
+  }
+
+  .btn-primary, .btn-secondary {
+    justify-content: center;
+  }
+}
+
 .features-section {
   padding: 80px 0;
   background: #fff;
@@ -616,6 +773,26 @@ export default {
   .cta-button {
     padding: 12px 25px;
     font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-tagline {
+    font-size: 1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 20px;
+  }
+
+  .btn-primary, .btn-secondary {
+    justify-content: center;
   }
 }
 </style>
