@@ -29,21 +29,21 @@
             <img src="/img/lightskin.jpg" alt="Light Skin" class="skin-img" />
           </div>
           <h3>Light Skin</h3>
-          <p>Warna kulit terang dengan undertone pink, peach, atau netral. Biasanya mudah terbakar matahari.</p>
+          <p>Light skin sedikit lebih gelap dari fair skin, memiliki variasi undertone seperti warm, cool, atau neutral, dan cocok dengan banyak pilihan warna pakaian maupun makeup.</p>
         </div>
         <div class="skin-type-card" data-aos="zoom-in" data-aos-delay="500">
           <div class="img-frame">
             <img src="/img/fairskin.jpeg" alt="Fair Skin" class="skin-img" />
           </div>
           <h3>Fair Skin</h3>
-          <p>Warna kulit sangat terang, seringkali dengan undertone dingin (cool) atau netral. Seringkali sensitif terhadap sinar matahari.</p>
+          <p>Fair skin adalah warna kulit yang sangat terang dan mudah terbakar matahari, biasanya memiliki undertone pink (cool) atau kuning pucat (warm).</p>
         </div>
         <div class="skin-type-card" data-aos="zoom-in" data-aos-delay="600">
           <div class="img-frame">
             <img src="/img/darkskin.png" alt="Dark Skin" class="skin-img" />
           </div>
           <h3>Dark Skin</h3>
-          <p>Warna kulit gelap dengan undertone hangat (warm), olive, atau netral. Biasanya lebih tahan terhadap paparan sinar matahari.</p>
+          <p>Dark skin memiliki pigmen tinggi, cenderung warm atau neutral, dan cocok dengan warna cerah atau metalik untuk tampilan yang kuat dan elegan.</p>
         </div>
       </div>
     </section>
