@@ -217,7 +217,7 @@ button:focus-visible {
 
 /* --- AboutUs.vue --- */
 .about-us {
-  padding-top: 120px; /* Increased padding to prevent navbar overlap */
+  padding-top: 180px; /* Further increased padding to prevent navbar overlap */
   padding-bottom: 40px;
   background: var(--bg-light);
   border-radius: 18px;
@@ -3332,6 +3332,8 @@ button:focus-visible {
   padding: 160px 20px 60px;
   min-height: 100vh;
   background-color: #ffffff;
+  position: relative;
+  z-index: 5;
 }
 
 .page-title {
@@ -3353,10 +3355,14 @@ button:focus-visible {
 }
 
 .feedback-form-container {
+  position: relative;
+  z-index: 10;
   max-width: 800px;
   margin: 0 auto 50px;
   padding: 40px;
   background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
 .form-group {
@@ -3368,6 +3374,14 @@ button:focus-visible {
   margin-bottom: 8px;
   color: #333;
   font-weight: 500;
+  text-align: left;
+  width: 100%;
+  position: relative;
+}
+
+/* Khusus untuk label rating */
+.form-group label[for="rating"] {
+  text-align: center;
 }
 
 .form-group input,
@@ -3385,6 +3399,8 @@ button:focus-visible {
   display: flex;
   gap: 5px;
   font-size: 1.5rem;
+  justify-content: center;  /* Menambahkan perataan ke tengah */
+  align-items: center;     /* Menambahkan perataan vertikal */
 }
 
 .star {
@@ -3599,7 +3615,7 @@ button:focus-visible {
   margin: 0 auto;
   padding: 40px;
   border-radius: 30px;
-  background: rgba(255, 255, 255, 0.1);
+  /* background: rgba(255, 255, 255, 0.1); */
   backdrop-filter: blur(0);
   animation: fadeIn 1s ease-out;
 }
@@ -3636,6 +3652,7 @@ button:focus-visible {
   background-clip: text;
   color: transparent;
   text-shadow: none;
+
 }
 
 .home .hero-tagline {

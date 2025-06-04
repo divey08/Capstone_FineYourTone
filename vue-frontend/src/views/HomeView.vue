@@ -132,32 +132,8 @@
             </div>
           </div>
         </div>
-      </div>    </section>
-    
-    <!-- CTA Section -->
-    <section class="cta-section" data-aos="fade-up">
-      <div class="container-fluid">
-        <div class="cta-container">
-          <div class="cta-content">
-            <h2>Mulai Mendeteksi Tone Kulit Anda</h2>
-            <p>Temukan rekomendasi warna yang paling sesuai dengan warna kulit Anda.</p>
-            <div class="cta-buttons">
-              <router-link to="/testing" class="cta-button primary">
-                <i class="fas fa-camera"></i> Deteksi Sekarang
-              </router-link>
-              <router-link to="/explore-undertone" class="cta-button secondary">
-                <i class="fas fa-info-circle"></i> Pelajari Undertone
-              </router-link>
-            </div>
-          </div>
-          <div class="cta-decoration">
-            <div class="decoration-circle"></div>
-            <div class="decoration-circle"></div>
-            <div class="decoration-circle"></div>
-          </div>
-        </div>
-      </div>
-    </section>
+      </div>   
+     </section>
   </div>
 </template>
 
