@@ -3,66 +3,78 @@
     <div class="card">
       <div class="card-header">
         <h4>Upload Gambar untuk Prediksi</h4>
-      </div>      <div class="card-body">
+      </div>
+      <div class="card-body">
         <form @submit.prevent="uploadImage">
           <div class="form-group">
-            <div class="upload-area" 
-                 :class="{ 'active': isDragging, 'has-image': imagePreview }"
-                 @dragover.prevent="isDragging = true"
-                 @dragleave.prevent="isDragging = false"
-                 @drop.prevent="onDropFile"
-                 @click="triggerFileInput">
-              
-              <div v-if="imagePreview" class="image-preview-container animate__animated animate__fadeIn">
+            <div
+              class="upload-area"
+              :class="{ active: isDragging, 'has-image': imagePreview }"
+              @dragover.prevent="isDragging = true"
+              @dragleave.prevent="isDragging = false"
+              @drop.prevent="onDropFile"
+              @click="triggerFileInput">
+              <div
+                v-if="imagePreview"
+                class="image-preview-container animate__animated animate__fadeIn">
                 <img :src="imagePreview" alt="Preview" class="preview-image" />
                 <div class="overlay">
                   <span class="change-text">Change Image</span>
                 </div>
               </div>
-              
+
               <div v-else class="upload-instructions">
                 <div class="upload-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="17 8 12 3 7 8"></polyline>
                     <line x1="12" y1="3" x2="12" y2="15"></line>
                   </svg>
                 </div>
-                <p class="drag-text">Drag & drop image here or click to browse</p>
+                <p class="drag-text">
+                  Drag & drop image here or click to browse
+                </p>
               </div>
             </div>
-            
-            <input 
-              type="file" 
+
+            <input
+              type="file"
               ref="fileInput"
-              @change="handleFileChange" 
+              @change="handleFileChange"
               accept="image/*"
               class="file-input"
-              id="image-input"
-            />
-            
+              id="image-input" />
+
             <div class="upload-options">
               <button type="button" class="camera-btn" @click="openCamera">
                 <i class="fas fa-camera"></i> Gunakan Kamera
               </button>
             </div>
           </div>
-          
+
           <transition name="fade" mode="out-in">
-            <button 
+            <button
               v-if="selectedFile"
-              type="submit" 
-              class="submit-btn" 
-              :disabled="isLoading"
-            >
+              type="submit"
+              class="submit-btn"
+              :disabled="isLoading">
               <span v-if="isLoading" class="loading-spinner"></span>
-              <span>{{ isLoading ? 'Processing...' : 'Analyze Image' }}</span>
+              <span>{{ isLoading ? "Processing..." : "Analyze Image" }}</span>
             </button>
             <div v-else class="empty-btn-space"></div>
           </transition>
         </form>
       </div>
-      
+
       <!-- Modal Kamera -->
       <div class="camera-modal" v-if="showCameraModal">
         <div class="camera-modal-content">
@@ -77,7 +89,7 @@
               <div class="camera-loader"></div>
               <p>Memuat kamera...</p>
             </div>
-            
+
             <div class="camera-error" v-if="cameraError">
               <i class="fas fa-exclamation-triangle"></i>
               <p>{{ cameraError }}</p>
@@ -85,47 +97,70 @@
                 <i class="fas fa-redo"></i> Coba Lagi
               </button>
             </div>
-            
+
             <div class="camera-flash" v-if="showFlash"></div>
-            <div class="countdown-overlay" v-if="countdownActive && !cameraError">
+            <div
+              class="countdown-overlay"
+              v-if="countdownActive && !cameraError">
               <div class="countdown-value">{{ countdownValue }}</div>
             </div>
-            
-            <video ref="videoElement" autoplay playsinline v-show="!capturedImage && !cameraLoading && !cameraError"></video>
-            <canvas ref="canvasElement" style="display:none;"></canvas>
-            
-            <div class="camera-guide" v-if="!capturedImage && !cameraLoading && !cameraError">
+
+            <video
+              ref="videoElement"
+              autoplay
+              playsinline
+              v-show="!capturedImage && !cameraLoading && !cameraError"></video>
+            <canvas ref="canvasElement" style="display: none"></canvas>
+
+            <div
+              class="camera-guide"
+              v-if="!capturedImage && !cameraLoading && !cameraError">
               <div class="guide-oval"></div>
               <p class="guide-text">Posisikan wajah Anda di dalam area</p>
             </div>
-            
-            <div class="camera-toolbar" v-if="!capturedImage && !cameraLoading && !cameraError">
-              <button class="switch-camera-btn" @click="switchCamera" v-if="hasMulitpleCameras">
+
+            <div
+              class="camera-toolbar"
+              v-if="!capturedImage && !cameraLoading && !cameraError">
+              <button
+                class="switch-camera-btn"
+                @click="switchCamera"
+                v-if="hasMulitpleCameras">
                 <i class="fas fa-sync-alt"></i>
               </button>
             </div>
-            
+
             <div class="camera-controls">
-              <div class="capture-options" v-if="!capturedImage && !cameraLoading && !cameraError">
+              <div
+                class="capture-options"
+                v-if="!capturedImage && !cameraLoading && !cameraError">
                 <button class="capture-btn" @click="startCountdown">
                   <i class="fas fa-camera"></i>
                 </button>
                 <div class="capture-mode">
                   <button class="timer-toggle" @click="toggleTimer">
                     <i class="fas fa-clock"></i>
-                    <span>{{ countdownValue > 0 ? countdownValue + 's' : 'Off' }}</span>
+                    <span>{{
+                      countdownValue > 0 ? countdownValue + "s" : "Off"
+                    }}</span>
                   </button>
                 </div>
               </div>
-              
-              <button v-if="capturedImage" class="accept-btn" @click="acceptImage">
+
+              <button
+                v-if="capturedImage"
+                class="accept-btn"
+                @click="acceptImage">
                 <i class="fas fa-check"></i> Gunakan
               </button>
-              <button v-if="capturedImage" class="retake-btn" @click="retakeImage">
+              <button
+                v-if="capturedImage"
+                class="retake-btn"
+                @click="retakeImage">
                 <i class="fas fa-redo"></i> Ambil Ulang
               </button>
             </div>
-            
+
             <!-- Countdown Timer -->
             <div v-if="countdownActive" class="countdown-timer">
               <p class="countdown-text">{{ countdownValue }}</p>
@@ -133,13 +168,25 @@
           </div>
         </div>
       </div>
-      
-      <div v-if="selectedFile" class="selected-file-info animate__animated animate__fadeIn">
+
+      <div
+        v-if="selectedFile"
+        class="selected-file-info animate__animated animate__fadeIn">
         <span class="file-name">{{ truncatedFileName }}</span>
         <button @click="resetForm" class="reset-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
             <polyline points="3 6 5 6 21 6"></polyline>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <path
+              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
           </svg>
         </button>
       </div>
@@ -149,7 +196,7 @@
 
 <script>
 export default {
-  name: 'ImageUploader',
+  name: "ImageUploader",
   data() {
     return {
       selectedFile: null,
@@ -160,20 +207,20 @@ export default {
       videoStream: null,
       capturedImage: null,
       cameraLoading: false,
-      currentFacingMode: 'user', // 'user' untuk kamera depan, 'environment' untuk belakang
+      currentFacingMode: "user", // 'user' untuk kamera depan, 'environment' untuk belakang
       hasMulitpleCameras: false,
       showFlash: false,
       countdownActive: false,
       countdownValue: 3,
-      cameraError: null
-    }
+      cameraError: null,
+    };
   },
   computed: {
     truncatedFileName() {
-      if (!this.selectedFile) return '';
+      if (!this.selectedFile) return "";
       const name = this.selectedFile.name;
-      return name.length > 20 ? name.substring(0, 17) + '...' : name;
-    }
+      return name.length > 20 ? name.substring(0, 17) + "..." : name;
+    },
   },
   methods: {
     handleFileChange(event) {
@@ -192,31 +239,40 @@ export default {
     },
     uploadImage() {
       if (!this.selectedFile) return;
-      
+
       this.isLoading = true;
+
+      // Create a form data object with the image file
       const formData = new FormData();
-      formData.append('my_image', this.selectedFile);
-      
+
+      // Make sure the file is properly named with an extension
+      const file = this.selectedFile;
+      const fileName = file.name || "image.jpg";
+
+      // Append the file to the form data with the key "image" as expected by the backend
+      formData.append("image", file, fileName);
+
       // Emit event with form data for parent to handle
-      this.$emit('upload', formData);
+      this.$emit("upload", formData);
     },
     onDropFile(e) {
       this.isDragging = false;
       const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) {
+      if (file && file.type.startsWith("image/")) {
         this.selectedFile = file;
         this.previewImage(file);
       }
     },
     triggerFileInput() {
       this.$refs.fileInput.click();
-    },    resetForm() {
+    },
+    resetForm() {
       this.selectedFile = null;
       this.imagePreview = null;
       this.capturedImage = null;
-      this.$refs.fileInput.value = '';
+      this.$refs.fileInput.value = "";
     },
-    
+
     // Metode untuk kamera
     openCamera() {
       this.showCameraModal = true;
@@ -225,108 +281,124 @@ export default {
         this.checkMultipleCameras();
       });
     },
-    
+
     async checkMultipleCameras() {
       if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
         this.hasMulitpleCameras = false;
         return;
       }
-      
+
       try {
         const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        const videoDevices = devices.filter(
+          (device) => device.kind === "videoinput"
+        );
         this.hasMulitpleCameras = videoDevices.length > 1;
       } catch (err) {
-        console.error('Error checking cameras:', err);
+        console.error("Error checking cameras:", err);
         this.hasMulitpleCameras = false;
       }
     },
-    
+
     async startCamera() {
       this.cameraLoading = true;
       this.cameraError = null;
-      
+
       try {
         // Hentikan stream sebelumnya jika ada
         if (this.videoStream) {
-          this.videoStream.getTracks().forEach(track => {
+          this.videoStream.getTracks().forEach((track) => {
             track.stop();
           });
         }
-        
+
         const constraints = {
           video: {
             facingMode: this.currentFacingMode,
             width: { ideal: 1280 },
-            height: { ideal: 720 }
-          }
+            height: { ideal: 720 },
+          },
         };
-        
-        this.videoStream = await navigator.mediaDevices.getUserMedia(constraints);
-        
+
+        this.videoStream = await navigator.mediaDevices.getUserMedia(
+          constraints
+        );
+
         if (this.$refs.videoElement) {
           this.$refs.videoElement.srcObject = this.videoStream;
         }
       } catch (err) {
-        console.error('Error akses kamera:', err);
+        console.error("Error akses kamera:", err);
         this.cameraError = this.getCameraErrorMessage(err);
       } finally {
         this.cameraLoading = false;
       }
     },
-    
+
     getCameraErrorMessage(error) {
-      if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
-        return 'Akses kamera ditolak. Silakan izinkan akses ke kamera dan coba lagi.';
-      } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
-        return 'Tidak dapat menemukan kamera. Pastikan perangkat Anda memiliki kamera.';
-      } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
-        return 'Kamera sedang digunakan oleh aplikasi lain. Tutup aplikasi tersebut dan coba lagi.';
-      } else if (error.name === 'OverconstrainedError' || error.name === 'ConstraintNotSatisfiedError') {
-        return 'Kamera tidak mendukung resolusi yang diminta. Coba dengan pengaturan berbeda.';
+      if (
+        error.name === "NotAllowedError" ||
+        error.name === "PermissionDeniedError"
+      ) {
+        return "Akses kamera ditolak. Silakan izinkan akses ke kamera dan coba lagi.";
+      } else if (
+        error.name === "NotFoundError" ||
+        error.name === "DevicesNotFoundError"
+      ) {
+        return "Tidak dapat menemukan kamera. Pastikan perangkat Anda memiliki kamera.";
+      } else if (
+        error.name === "NotReadableError" ||
+        error.name === "TrackStartError"
+      ) {
+        return "Kamera sedang digunakan oleh aplikasi lain. Tutup aplikasi tersebut dan coba lagi.";
+      } else if (
+        error.name === "OverconstrainedError" ||
+        error.name === "ConstraintNotSatisfiedError"
+      ) {
+        return "Kamera tidak mendukung resolusi yang diminta. Coba dengan pengaturan berbeda.";
       } else {
-        return 'Terjadi kesalahan saat mengakses kamera: ' + error.message;
+        return "Terjadi kesalahan saat mengakses kamera: " + error.message;
       }
     },
-    
+
     stopCamera() {
       if (this.videoStream) {
-        this.videoStream.getTracks().forEach(track => {
+        this.videoStream.getTracks().forEach((track) => {
           track.stop();
         });
         this.videoStream = null;
       }
     },
-    
+
     captureImage() {
       if (!this.$refs.videoElement || !this.$refs.canvasElement) return;
-      
+
       // Tampilkan efek flash
       this.showFlash = true;
       setTimeout(() => {
         this.showFlash = false;
       }, 300);
-      
+
       const video = this.$refs.videoElement;
       const canvas = this.$refs.canvasElement;
-      
+
       // Set canvas dimensions to match video
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-      
+
       // Draw current video frame to canvas
-      const context = canvas.getContext('2d');
+      const context = canvas.getContext("2d");
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      
+
       // Convert to data URL
-      this.capturedImage = canvas.toDataURL('image/jpeg', 0.9); // 0.9 untuk kualitas yang baik tapi tidak terlalu berat
-      
+      this.capturedImage = canvas.toDataURL("image/jpeg", 0.9); // 0.9 untuk kualitas yang baik tapi tidak terlalu berat
+
       // Replace video with captured image
-      video.style.display = 'none';
-      canvas.style.display = 'block';
-      canvas.style.maxWidth = '100%';
-      canvas.style.height = 'auto';
-      
+      video.style.display = "none";
+      canvas.style.display = "block";
+      canvas.style.maxWidth = "100%";
+      canvas.style.height = "auto";
+
       // Show captured image on canvas
       const img = new Image();
       img.onload = () => {
@@ -334,53 +406,56 @@ export default {
       };
       img.src = this.capturedImage;
     },
-    
+
     retakeImage() {
       if (!this.$refs.videoElement || !this.$refs.canvasElement) return;
-      
+
       // Reset captured image
       this.capturedImage = null;
-      
+
       // Show video again
-      this.$refs.videoElement.style.display = 'block';
-      this.$refs.canvasElement.style.display = 'none';
+      this.$refs.videoElement.style.display = "block";
+      this.$refs.canvasElement.style.display = "none";
     },
-    
+
     acceptImage() {
       if (!this.capturedImage) return;
-      
+
       // Convert data URL to File object
       fetch(this.capturedImage)
-        .then(res => res.blob())
-        .then(blob => {
-          const file = new File([blob], "camera-capture.jpg", { type: "image/jpeg" });
+        .then((res) => res.blob())
+        .then((blob) => {
+          const file = new File([blob], "camera-capture.jpg", {
+            type: "image/jpeg",
+          });
           this.selectedFile = file;
           this.imagePreview = this.capturedImage;
           this.closeCameraModal();
         });
     },
-    
+
     closeCameraModal() {
       this.showCameraModal = false;
       this.stopCamera();
       this.capturedImage = null;
       this.cameraLoading = false;
-      
+
       if (this.$refs.videoElement) {
-        this.$refs.videoElement.style.display = 'block';
+        this.$refs.videoElement.style.display = "block";
       }
-      
+
       if (this.$refs.canvasElement) {
-        this.$refs.canvasElement.style.display = 'none';
+        this.$refs.canvasElement.style.display = "none";
       }
     },
-    
+
     switchCamera() {
       // Toggle facing mode
-      this.currentFacingMode = this.currentFacingMode === 'user' ? 'environment' : 'user';
+      this.currentFacingMode =
+        this.currentFacingMode === "user" ? "environment" : "user";
       this.startCamera(); // Restart kamera dengan mode yang baru
     },
-    
+
     toggleTimer() {
       // Rotate through timer options: 0 (off) -> 3 -> 5 -> 0
       if (this.countdownValue === 0) {
@@ -391,35 +466,36 @@ export default {
         this.countdownValue = 0;
       }
     },
-    
+
     startCountdown() {
       if (this.countdownValue <= 0) {
         this.captureImage();
         return;
       }
-      
+
       this.countdownActive = true;
       let count = this.countdownValue;
-      
+
       const countInterval = setInterval(() => {
         count--;
         this.countdownValue = count;
-        
+
         if (count <= 0) {
           clearInterval(countInterval);
           this.countdownActive = false;
-          this.countdownValue = this.countdownValue === 0 ? 0 : this.countdownValue === 1 ? 3 : 5; // Reset to original value
+          this.countdownValue =
+            this.countdownValue === 0 ? 0 : this.countdownValue === 1 ? 3 : 5; // Reset to original value
           this.captureImage();
         }
       }, 1000);
     },
-    
+
     retryCamera() {
       this.cameraError = null;
       this.startCamera();
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -456,7 +532,7 @@ export default {
   margin: 0;
   font-weight: 700;
   font-size: 22px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .card-body {
@@ -486,18 +562,30 @@ export default {
   overflow: hidden;
   position: relative;
   transition: all 0.3s ease;
-  background: linear-gradient(135deg, rgba(244, 122, 158, 0.05), rgba(246, 189, 217, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(244, 122, 158, 0.05),
+    rgba(246, 189, 217, 0.05)
+  );
 }
 
 .upload-area:hover {
   border-color: #f47a9e;
-  background: linear-gradient(135deg, rgba(244, 122, 158, 0.08), rgba(246, 189, 217, 0.08));
+  background: linear-gradient(
+    135deg,
+    rgba(244, 122, 158, 0.08),
+    rgba(246, 189, 217, 0.08)
+  );
   transform: scale(1.02);
 }
 
 .upload-area.active {
   border-color: #f47a9e;
-  background: linear-gradient(135deg, rgba(244, 122, 158, 0.1), rgba(246, 189, 217, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(244, 122, 158, 0.1),
+    rgba(246, 189, 217, 0.1)
+  );
 }
 
 .upload-area.has-image {
@@ -563,8 +651,13 @@ export default {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .drag-text {
@@ -622,8 +715,12 @@ export default {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .selected-file-info {
@@ -661,10 +758,12 @@ export default {
 }
 
 /* Fade animation */
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
   transform: translateY(10px);
 }
@@ -685,8 +784,12 @@ export default {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .camera-modal-content {
@@ -702,8 +805,14 @@ export default {
 }
 
 @keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .camera-header {
@@ -718,7 +827,7 @@ export default {
 }
 
 .camera-header:before {
-  content: '';
+  content: "";
   position: absolute;
   top: -50%;
   left: -50%;
@@ -768,7 +877,8 @@ export default {
   align-items: center;
 }
 
-.camera-body video, .camera-body canvas {
+.camera-body video,
+.camera-body canvas {
   width: 100%;
   max-height: 60vh;
   object-fit: cover;
@@ -835,8 +945,15 @@ export default {
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 0.7; }
-  50% { transform: scale(1.02); opacity: 1; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
 }
 
 /* Tombol kamera */
@@ -874,7 +991,7 @@ export default {
     width: 95%;
     max-width: 500px;
   }
-  
+
   .camera-controls {
     gap: 10px;
   }
@@ -884,17 +1001,19 @@ export default {
   .camera-header h3 {
     font-size: 18px;
   }
-  
-  .camera-body video, .camera-body canvas {
+
+  .camera-body video,
+  .camera-body canvas {
     max-height: 50vh;
   }
-  
+
   .capture-btn {
     width: 50px;
     height: 50px;
   }
-  
-  .accept-btn, .retake-btn {
+
+  .accept-btn,
+  .retake-btn {
     padding: 10px 16px;
     font-size: 13px;
   }
@@ -943,8 +1062,13 @@ export default {
 }
 
 @keyframes countdownPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .camera-error {
@@ -1026,36 +1150,37 @@ export default {
   .countdown-value {
     font-size: 90px;
   }
-  
+
   .guide-oval {
     width: 80%;
     height: 70%;
   }
-  
+
   .camera-controls {
     padding: 15px 0 5px;
   }
-  
+
   .camera-modal-content {
     width: 100%;
     height: 100%;
     max-width: none;
     border-radius: 0;
   }
-  
+
   .camera-body {
     padding: 10px;
     flex: 1;
     display: flex;
     flex-direction: column;
   }
-  
-  .camera-body video, .camera-body canvas {
+
+  .camera-body video,
+  .camera-body canvas {
     flex: 1;
     object-fit: cover;
     height: auto;
   }
-  
+
   .capture-btn {
     width: 50px;
     height: 50px;

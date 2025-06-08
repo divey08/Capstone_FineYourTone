@@ -8,7 +8,9 @@
             <i class="fas fa-camera-retro"></i>
           </div>
           <h1 class="page-title">Skin Tone Detection</h1>
-          <p class="subtitle">Kenali warna kulit Anda dengan mengunggah foto.</p>
+          <p class="subtitle">
+            Kenali warna kulit Anda dengan mengunggah foto.
+          </p>
         </div>
       </div>
     </div>
@@ -16,8 +18,13 @@
     <section id="upload-section" class="testing-section">
       <div class="container">
         <div class="section-header" data-aos="fade-up">
-          <h2 class="section-title"><i class="fas fa-palette"></i> Analisis Warna Kulit</h2>
-          <p class="section-description">Unggah gambar wajah Anda untuk mendapatkan analisis warna kulit yang akurat</p>
+          <h2 class="section-title">
+            <i class="fas fa-palette"></i> Analisis Warna Kulit
+          </h2>
+          <p class="section-description">
+            Unggah gambar wajah Anda untuk mendapatkan analisis warna kulit yang
+            akurat
+          </p>
         </div>
 
         <div class="upload-container">
@@ -35,8 +42,11 @@
           </div>
           <div class="info-content">
             <h3>Cara Kerja</h3>
-            <p>Sistem kami dirancang untuk menganalisis warna kulit Anda dan memberikan hasil yang akurat.
-              Pastikan foto diambil dengan pencahayaan yang baik untuk mendapatkan hasil terbaik.</p>
+            <p>
+              Sistem kami dirancang untuk menganalisis warna kulit Anda dan
+              memberikan hasil yang akurat. Pastikan foto diambil dengan
+              pencahayaan yang baik untuk mendapatkan hasil terbaik.
+            </p>
           </div>
         </div>
       </div>
@@ -44,17 +54,22 @@
 
     <section class="benefits-section" data-aos="fade-up">
       <div class="container">
-        <h2 class="section-title"><i class="fas fa-award"></i> Keunggulan FineYourTone</h2>
-        
+        <h2 class="section-title">
+          <i class="fas fa-award"></i> Keunggulan FineYourTone
+        </h2>
+
         <div class="benefits-grid">
           <div class="benefit-card" data-aos="fade-up" data-aos-delay="100">
             <div class="benefit-icon">
               <i class="fas fa-bullseye"></i>
             </div>
             <h3>Akurat</h3>
-            <p>Teknologi deteksi warna kulit yang akurat dan terpercaya untuk hasil yang konsisten setiap saat</p>
+            <p>
+              Teknologi deteksi warna kulit yang akurat dan terpercaya untuk
+              hasil yang konsisten setiap saat
+            </p>
           </div>
-          
+
           <div class="benefit-card" data-aos="fade-up" data-aos-delay="200">
             <div class="benefit-icon">
               <i class="fas fa-bolt"></i>
@@ -62,13 +77,15 @@
             <h3>Cepat</h3>
             <p>Proses analisis hanya membutuhkan waktu beberapa detik</p>
           </div>
-          
+
           <div class="benefit-card" data-aos="fade-up" data-aos-delay="300">
             <div class="benefit-icon">
               <i class="fas fa-mobile-alt"></i>
             </div>
             <h3>Responsif</h3>
-            <p>Dapat digunakan dengan nyaman di perangkat mobile maupun desktop</p>
+            <p>
+              Dapat digunakan dengan nyaman di perangkat mobile maupun desktop
+            </p>
           </div>
         </div>
       </div>
@@ -77,46 +94,60 @@
 </template>
 
 <script>
-import ImageUploader from '@/components/ImageUploader.vue';
-import ResultsDisplay from '@/components/ResultsDisplay.vue';
-import apiService from '@/services/api.js';
+import ImageUploader from "@/components/ImageUploader.vue";
+import ResultsDisplay from "@/components/ResultsDisplay.vue";
+import apiService from "@/services/api.js";
 
 export default {
-  name: 'TestingView',
+  name: "TestingView",
   components: {
     ImageUploader,
-    ResultsDisplay
+    ResultsDisplay,
   },
   data() {
     return {
       result: null,
       isLoading: false,
-      error: null
-    }
+      error: null,
+    };
   },
   methods: {
     async handleImageUpload(formData) {
       this.isLoading = true;
       this.error = null;
-      
-      try {        const response = await apiService.uploadImage(formData);
-        
-        // Process the response
+      this.result = null;
+
+      try {
+        const response = await apiService.uploadImage(formData);
+
+        // Process the response based on the new structure
         if (response.data) {
+          console.log("API Response:", response.data);
+
           this.result = {
-            imgUrl: `/api/static/${response.data.img_path}`,
-            detectedLabels: response.data.detected_labels
+            // Use the uploaded image from your form as the preview
+            imagePreview: URL.createObjectURL(formData.get("image")),
+            // Map the new response format
+            skinClass: response.data.class,
+            confidence: response.data.confidence,
+            probabilities: response.data.probabilities,
           };
         }
       } catch (error) {
-        this.error = error.message || 'Failed to upload image';
-        console.error('Error uploading image:', error);
+        this.error = error.message || "Failed to upload image";
+        console.error("Error uploading image:", error);
+
+        // Set result with error information to display to user
+        this.result = {
+          error: true,
+          message: `Terjadi kesalahan: ${this.error}`,
+        };
       } finally {
         this.isLoading = false;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -124,8 +155,8 @@ export default {
   min-height: 100vh;
 }
 
-.hero-banner {  
-  background: url('/img/kegunaan 3.jpg') center/cover no-repeat;
+.hero-banner {
+  background: url("/img/kegunaan 3.jpg") center/cover no-repeat;
   padding: 150px 0 80px; /* Menambah padding untuk memperpanjang foto */
   position: relative;
   overflow: hidden;
@@ -142,7 +173,11 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.8));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 255, 255, 0.8)
+  );
   z-index: 1;
 }
 
@@ -171,7 +206,7 @@ export default {
   font-size: 3.5rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   color: #333;
   text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
 }
@@ -202,7 +237,7 @@ export default {
 }
 
 .section-header::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -15px;
   left: 50%;
@@ -217,7 +252,7 @@ export default {
   font-size: 2.2rem;
   color: #333;
   margin-bottom: 1rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .section-title i {
@@ -242,7 +277,8 @@ export default {
   padding: 0 1rem;
 }
 
-.upload-box, .result-box {
+.upload-box,
+.result-box {
   background: white;
   border-radius: 25px;
   padding: 2.5rem;
@@ -251,7 +287,8 @@ export default {
   border: 1px solid rgba(244, 122, 158, 0.1);
 }
 
-.upload-box:hover, .result-box:hover {
+.upload-box:hover,
+.result-box:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 40px rgba(244, 122, 158, 0.12);
   border-color: rgba(244, 122, 158, 0.2);
@@ -286,7 +323,7 @@ export default {
 .info-content h3 {
   font-size: 1.8rem;
   margin-bottom: 1rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   color: #ffffff;
 }
 
@@ -304,13 +341,17 @@ export default {
 }
 
 .benefits-section::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  background: linear-gradient(45deg, rgba(244, 122, 158, 0.03), rgba(246, 189, 217, 0.05));
+  background: linear-gradient(
+    45deg,
+    rgba(244, 122, 158, 0.03),
+    rgba(246, 189, 217, 0.05)
+  );
   pointer-events: none;
 }
 
@@ -364,7 +405,7 @@ export default {
   color: #333;
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .benefit-card p {
@@ -374,9 +415,15 @@ export default {
 }
 
 @keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 768px) {
@@ -402,7 +449,8 @@ export default {
   .hero-icon {
     font-size: 2.5rem;
     margin-bottom: 1.5rem;
-  }  .testing-section {
+  }
+  .testing-section {
     padding: 60px 0;
   }
 
@@ -420,7 +468,9 @@ export default {
     padding: 0 1rem;
   }
 
-  .upload-box, .result-box, .info-box {
+  .upload-box,
+  .result-box,
+  .info-box {
     padding: 1.8rem;
   }
 
