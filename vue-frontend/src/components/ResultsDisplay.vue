@@ -45,6 +45,21 @@
                     Confidence:
                     {{ ((result.confidence || 0) * 100).toFixed(0) }}%
                   </div>
+                  <button class="recommendation-button" @click="showRecommendations = true" v-if="result && !showRecommendations">
+                    Lihat Rekomendasi Warna
+                  </button>
+                </div>
+
+                <div v-if="showRecommendations" class="recommendations-section">
+                  <h4>Rekomendasi Warna untuk {{ getSkinToneLabel(result.skinClass || "") }}</h4>
+                  <div class="color-recommendations">
+                    <div v-for="(color, index) in getColorRecommendations(result.skinClass)" 
+                         :key="index" 
+                         class="color-item"
+                         :style="{ backgroundColor: color.hex }">
+                      <span class="color-name">{{ color.name }}</span>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="probabilities">
@@ -95,6 +110,31 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+      showRecommendations: false,
+      colorRecommendations: {
+        dark: [
+          { name: 'Putih', hex: '#FFFFFF' },
+          { name: 'Merah Muda', hex: '#FFB6C1' },
+          { name: 'Biru Muda', hex: '#ADD8E6' },
+          { name: 'Kuning Pastel', hex: '#FFFACD' }
+        ],
+        light: [
+          { name: 'Navy', hex: '#000080' },
+          { name: 'Hijau Tua', hex: '#006400' },
+          { name: 'Burgundy', hex: '#800020' },
+          { name: 'Ungu Tua', hex: '#4B0082' }
+        ],
+        olive: [
+          { name: 'Coklat Kayu', hex: '#DEB887' },
+          { name: 'Hijau Olive', hex: '#808000' },
+          { name: 'Coral', hex: '#FF7F50' },
+          { name: 'Turquoise', hex: '#40E0D0' }
+        ]
+      }
+    };
+  },
   methods: {
     getSkinToneLabel(toneType) {
       if (!toneType) return "Tidak Diketahui";
@@ -107,6 +147,9 @@ export default {
 
       return labels[toneType] || toneType;
     },
+    getColorRecommendations(skinType) {
+      return this.colorRecommendations[skinType] || [];
+    }
   },
   computed: {
     imageUrl() {
@@ -429,6 +472,68 @@ export default {
   font-weight: 600;
 }
 
+.recommendation-button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #f47a9e, #f6bdd9);
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(244, 122, 158, 0.2);
+}
+
+.recommendation-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(244, 122, 158, 0.3);
+}
+
+.recommendations-section {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(244, 122, 158, 0.05);
+  border-radius: 15px;
+  text-align: center;
+}
+
+.recommendations-section h4 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.color-recommendations {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.color-item {
+  width: 100px;
+  height: 100px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.color-name {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: #333;
+  position: absolute;
+  bottom: 8px;
+  white-space: nowrap;
+}
+
 @media (max-width: 768px) {
   .card-body {
     padding: 20px;
@@ -449,6 +554,10 @@ export default {
 
   .empty-state p {
     font-size: 1rem;
+  }
+
+  .color-item {
+    flex: 1 1 calc(50% - 10px);
   }
 }
 </style>
