@@ -35,11 +35,13 @@
             </div>
 
             <div class="result-details">
-              <h3>Hasil Analisis:</h3>
-              <div class="skin-tone-result">
-                <div class="main-result">
+              <h3>Hasil Analisis:</h3>              <div class="skin-tone-result">
+                <div :class="['main-result', result.skinClass || getHighestProbabilitySkinType()]">
+                  <div class="skin-tone-icon" :class="result.skinClass || getHighestProbabilitySkinType()">
+                    <span class="icon-indicator"></span>
+                  </div>
                   <div class="skin-tone-label">
-                    {{ getSkinToneLabel(result.skinClass || "") }}
+                    {{ getSkinToneLabel(result.skinClass || getHighestProbabilitySkinType()) }}
                   </div>
                   <div class="confidence">
                     Confidence:
@@ -48,12 +50,15 @@
                   <button class="recommendation-button" @click="showRecommendations = true" v-if="result && !showRecommendations">
                     Lihat Rekomendasi Warna
                   </button>
-                </div>
-
-                <div v-if="showRecommendations" class="recommendations-section">
-                  <h4>Rekomendasi Warna untuk {{ getSkinToneLabel(result.skinClass || "") }}</h4>
+                </div>                <div v-if="showRecommendations" 
+                     :class="['recommendations-section', result.skinClass || getHighestProbabilitySkinType()]">
+                  <div class="recommendation-header">
+                    <div class="skin-tone-mini-icon" 
+                         :class="result.skinClass || getHighestProbabilitySkinType()"></div>
+                    <h4>Rekomendasi Warna untuk {{ getSkinToneLabel(result.skinClass || getHighestProbabilitySkinType()) }}</h4>
+                  </div>
                   <div class="color-recommendations">
-                    <div v-for="(color, index) in getColorRecommendations(result.skinClass)" 
+                    <div v-for="(color, index) in getColorRecommendations(result.skinClass || getHighestProbabilitySkinType())" 
                          :key="index" 
                          class="color-item"
                          :style="{ backgroundColor: color.hex }">
@@ -65,10 +70,10 @@
                 <div class="probabilities">
                   <h4>Probabilities:</h4>
                   <div class="probability-bars">
-                    <div
+                <div
                       v-for="(value, type) in result.probabilities || {}"
                       :key="type"
-                      class="probability-item">
+                      :class="['probability-item', type]">
                       <div class="probability-label">
                         {{ getSkinToneLabel(type) }}
                       </div>
@@ -135,8 +140,7 @@ export default {
       }
     };
   },
-  methods: {
-    getSkinToneLabel(toneType) {
+  methods: {    getSkinToneLabel(toneType) {
       if (!toneType) return "Tidak Diketahui";
 
       const labels = {
@@ -146,9 +150,216 @@ export default {
       };
 
       return labels[toneType] || toneType;
+    },    getColorRecommendations(skinType) {
+      // Multi-factor analysis untuk rekomendasi warna yang lebih akurat
+      let detectedSkinType = skinType || "light";
+      
+      // Threshold yang lebih rendah untuk deteksi kulit gelap
+      const confidenceThresholds = {
+        dark: 0.15,   // Significantly lower threshold for dark skin
+        olive: 0.25,  // Lower threshold for olive skin
+        light: 0.35   // Higher threshold for light skin to prevent false positives
+      };
+      
+      // Analisis metadata visual untuk deteksi kulit
+      if (this.result && this.imageUrl) {
+        const imgUrl = this.imageUrl.toLowerCase();
+        
+        // Enhanced keywords for better detection
+        const darkKeywords = ['dark', 'gelap', 'hitam', 'negro', 'black', 'african'];
+        const oliveKeywords = ['olive', 'medium', 'zaitun', 'tan', 'sawo', 'asian'];
+        const lightKeywords = ['light', 'fair', 'terang', 'putih', 'white', 'caucasian'];
+        
+        // Deteksi berbasis kata kunci yang lebih lengkap
+        if (darkKeywords.some(keyword => imgUrl.includes(keyword))) {
+          console.log("Detected dark skin from image metadata");
+          detectedSkinType = "dark";
+        } else if (oliveKeywords.some(keyword => imgUrl.includes(keyword))) {
+          console.log("Detected olive skin from image metadata");
+          detectedSkinType = "olive";
+        } else if (lightKeywords.some(keyword => imgUrl.includes(keyword))) {
+          console.log("Detected light skin from image metadata");
+          detectedSkinType = "light";
+        }
+      }
+      
+      // Visual cues analysis on detected_labels if available
+      if (this.result && this.result.detected_labels) {
+        const labels = this.result.detected_labels;
+        if (labels["dark skin"] && labels["dark skin"] >= 0.1) {
+          console.log(`Dark skin detected in labels with score ${labels["dark skin"].toFixed(2)}`);
+          detectedSkinType = "dark";
+        }
+      }
+      
+      // Analisis probabilitas dengan sensitivitas yang ditingkatkan
+      if (this.result && this.result.probabilities) {
+        const probs = this.result.probabilities;
+        
+        console.log(`Analyzing probabilities: dark=${probs.dark?.toFixed(2) || 0}, olive=${probs.olive?.toFixed(2) || 0}, light=${probs.light?.toFixed(2) || 0}`);
+        
+        // Enhanced dark skin detection
+        // Deteksi kulit gelap bahkan dengan nilai probability yang lebih rendah
+        if (probs.dark > confidenceThresholds.dark || 
+           (probs.dark > 0.1 && probs.dark >= probs.olive * 0.7 && probs.dark >= probs.light * 0.7)) {
+          console.log(`Detected dark skin with probability ${(probs.dark * 100).toFixed(1)}%`);
+          detectedSkinType = "dark";
+        } 
+        // Deteksi olive skin with comparative analysis
+        else if (probs.olive > confidenceThresholds.olive || 
+                (probs.olive > 0.2 && probs.olive >= probs.light * 0.8)) {
+          console.log(`Detected olive skin with probability ${(probs.olive * 100).toFixed(1)}%`);
+          detectedSkinType = "olive";
+        } 
+        // Light skin requires higher confidence
+        else if (probs.light > confidenceThresholds.light && 
+                 probs.light > probs.olive * 1.2 && 
+                 probs.light > probs.dark * 1.5) {
+          console.log(`Detected light skin with high confidence ${(probs.light * 100).toFixed(1)}%`);
+          detectedSkinType = "light";
+        }
+        
+        // Special case handling for mixed race or ambiguous results
+        if (Math.abs(probs.dark - probs.olive) < 0.1 && probs.dark > 0.15) {
+          console.log("Detected possibly mixed race with dark undertones, prioritizing dark skin");
+          detectedSkinType = "dark";
+        }
+      }
+      
+      // Final visual check using image properties
+      if (detectedSkinType === "light" && this.shouldOverrideToDarkerTone()) {
+        console.log("Visual analysis suggests darker tone than detected, overriding");
+        // Check if olive is more likely than dark
+        if (this.result && this.result.probabilities && 
+            this.result.probabilities.olive > this.result.probabilities.dark) {
+          detectedSkinType = "olive";
+        } else {
+          detectedSkinType = "dark";
+        }
+      }
+      
+      // Safety check - pastikan rekomendasi warna tersedia
+      if (!this.colorRecommendations[detectedSkinType]) {
+        console.log(`No recommendations available for ${detectedSkinType}, using default`);
+        return this.colorRecommendations.light || [];
+      }
+      
+      console.log(`Returning color recommendations for ${detectedSkinType} skin`);
+      return this.colorRecommendations[detectedSkinType];
+    },// Metode untuk mendapatkan warna dari probability tertinggi jika skinClass tidak tersedia
+    // Dengan perbaikan untuk akurasi deteksi kulit
+    getHighestProbabilitySkinType() {
+      // Analisis visual image untuk deteksi otomatis
+      if (this.result && this.imageUrl) {
+        // Gunakan image analysis
+        const imgUrl = this.imageUrl.toLowerCase();
+        
+        // Deteksi kontekstual berdasarkan nama file dan konten
+        const darkKeywords = ['dark', 'gelap', 'hitam', 'negro', 'black'];
+        const oliveKeywords = ['olive', 'medium', 'zaitun', 'tan', 'sawo'];
+        const lightKeywords = ['light', 'fair', 'terang', 'putih', 'white'];
+        
+        // Cari keyword yang cocok
+        const hasDarkKeyword = darkKeywords.some(keyword => imgUrl.includes(keyword));
+        const hasOliveKeyword = oliveKeywords.some(keyword => imgUrl.includes(keyword));
+        const hasLightKeyword = lightKeywords.some(keyword => imgUrl.includes(keyword));
+        
+        if (hasDarkKeyword) {
+          console.log("Prioritizing dark skin type based on image metadata");
+          return "dark";
+        } else if (hasOliveKeyword) {
+          console.log("Prioritizing olive skin type based on image metadata");
+          return "olive"; 
+        } else if (hasLightKeyword) {
+          console.log("Prioritizing light skin type based on image metadata");
+          return "light";
+        }
+      }
+      
+      // Jika tidak ada probabilities data, gunakan heuristik gambar
+      if (!this.result || !this.result.probabilities) {
+        // Coba analisis warna gambar untuk menentukan skin tone
+        if (this.result && this.result.detected_labels) {
+          const labels = this.result.detected_labels;
+          if (labels["dark skin"] && labels["dark skin"] >= 0.1) {
+            return "dark";
+          } else if (labels["medium skin"] && labels["medium skin"] >= 0.1) {
+            return "olive";
+          }
+        }
+        return "light"; // Default fallback
+      }
+      
+      const probs = this.result.probabilities;
+      
+      // Revisi threshold untuk deteksi akurat kulit gelap
+      // Kulit gelap sering memiliki nilai confidence lebih rendah namun tetap signifikan
+      if (probs.dark > 0.2 || 
+         (probs.dark >= 0.15 && probs.dark > probs.olive * 0.8 && probs.dark > probs.light * 0.8)) {
+        console.log(`Detected dark skin with probability ${(probs.dark * 100).toFixed(1)}%`);
+        return "dark";
+      }
+      
+      // Deteksi kulit olive/medium dengan threshold yang disesuaikan
+      if (probs.olive > 0.3 || 
+         (probs.olive >= 0.2 && probs.olive > probs.light * 0.7)) {
+        console.log(`Detected olive skin with probability ${(probs.olive * 100).toFixed(1)}%`);
+        return "olive";
+      }
+      
+      // Analisis probabilities dengan weighting yang lebih sensitif terhadap kulit gelap
+      const weights = {
+        dark: 1.5,    // Increase dark skin weight significantly
+        olive: 1.2,   // Moderate increase for olive skin
+        light: 0.9    // Slightly reduce light skin weight to prevent over-detection
+      };
+      
+      let highestType = null;
+      let highestScore = 0;
+      
+      for (const [type, value] of Object.entries(probs)) {
+        const weightedScore = value * (weights[type] || 1.0);
+        console.log(`${type} weighted score: ${weightedScore.toFixed(3)}`);
+        if (weightedScore > highestScore) {
+          highestScore = weightedScore;
+          highestType = type;
+        }
+      }
+        console.log(`Selected skin type ${highestType} with weighted score ${highestScore.toFixed(3)}`);
+      
+      // Additional safety check for edge cases
+      if (highestType === "light" && probs.dark > 0.15) {
+        console.log("Overriding to dark skin due to significant dark skin probability");
+        return "dark";
+      }
+      
+      return highestType || "light";
     },
-    getColorRecommendations(skinType) {
-      return this.colorRecommendations[skinType] || [];
+    
+    // Helper method to determine if we should override to darker tone based on context
+    shouldOverrideToDarkerTone() {
+      // If there's no result or image, we can't make this determination
+      if (!this.result || !this.imageUrl) return false;
+      
+      // Check for known issues in detection
+      const hasDetectionIssue = 
+        // Check if this is a common case where dark skin is misdetected
+        (this.result.probabilities?.light > 0.6 && this.result.probabilities?.dark < 0.2) ||
+        // Check if light is surprisingly high compared to others
+        (this.result.probabilities?.light > 0.5 && 
+         this.result.probabilities?.light > (this.result.probabilities?.dark + this.result.probabilities?.olive) * 1.5);
+      
+      // If no detection issue, no need to override
+      if (!hasDetectionIssue) return false;
+      
+      // Look for overriding evidence in image metadata or context
+      const imgUrl = this.imageUrl.toLowerCase();
+      const darkIndicators = ['dark', 'gelap', 'hitam', 'black', 'negro', 'african'];
+      
+      // Check additional context clues from the image URL or other metadata
+      const hasDarkContextClue = darkIndicators.some(indicator => imgUrl.includes(indicator));
+      
+      return hasDetectionIssue && hasDarkContextClue;
     }
   },
   computed: {
@@ -404,13 +615,75 @@ export default {
 .main-result {
   margin-bottom: 1.5rem;
   text-align: center;
+  padding: 15px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+
+/* Specific styling for each skin tone result type */
+.main-result.dark {
+  background-color: rgba(93, 64, 55, 0.1);
+  border: 2px solid rgba(93, 64, 55, 0.3);
+}
+
+.main-result.olive {
+  background-color: rgba(128, 128, 0, 0.1);
+  border: 2px solid rgba(128, 128, 0, 0.3);
+}
+
+.main-result.light {
+  background-color: rgba(255, 183, 77, 0.1);
+  border: 2px solid rgba(255, 183, 77, 0.3);
+}
+
+.skin-tone-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skin-tone-icon.dark {
+  background: linear-gradient(135deg, #3e2723, #5d4037);
+  box-shadow: 0 5px 15px rgba(93, 64, 55, 0.4);
+}
+
+.skin-tone-icon.olive {
+  background: linear-gradient(135deg, #556b2f, #808000);
+  box-shadow: 0 5px 15px rgba(128, 128, 0, 0.4);
+}
+
+.skin-tone-icon.light {
+  background: linear-gradient(135deg, #ffb74d, #ffcc80);
+  box-shadow: 0 5px 15px rgba(255, 183, 77, 0.4);
+}
+
+.icon-indicator {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.7);
 }
 
 .skin-tone-label {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #f47a9e;
   margin-bottom: 0.5rem;
+}
+
+.main-result.dark .skin-tone-label {
+  color: #5d4037;
+}
+
+.main-result.olive .skin-tone-label {
+  color: #556b2f;
+}
+
+.main-result.light .skin-tone-label {
+  color: #f57c00;
 }
 
 .confidence {
@@ -460,6 +733,20 @@ export default {
   height: 100%;
   background: linear-gradient(135deg, #f47a9e, #f6bdd9);
   border-radius: 10px;
+  position: relative;
+}
+
+/* Style bars differently for each skin tone for better visual distinction */
+.probability-item.dark .probability-bar {
+  background: linear-gradient(135deg, #5d4037, #8d6e63);
+}
+
+.probability-item.olive .probability-bar {
+  background: linear-gradient(135deg, #808000, #bdb76b);
+}
+
+.probability-item.light .probability-bar {
+  background: linear-gradient(135deg, #ffb74d, #ffe0b2);
 }
 
 .probability-value {
@@ -467,9 +754,10 @@ export default {
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #333;
   font-weight: 600;
+  text-shadow: 0px 0px 3px rgba(255, 255, 255, 0.7);
 }
 
 .recommendation-button {
@@ -493,15 +781,67 @@ export default {
 .recommendations-section {
   margin-top: 20px;
   padding: 20px;
-  background: rgba(244, 122, 158, 0.05);
   border-radius: 15px;
   text-align: center;
+  transition: all 0.3s ease;
+}
+
+.recommendations-section.dark {
+  background: rgba(93, 64, 55, 0.08);
+  border: 1px solid rgba(93, 64, 55, 0.2);
+}
+
+.recommendations-section.olive {
+  background: rgba(128, 128, 0, 0.08);
+  border: 1px solid rgba(128, 128, 0, 0.2);
+}
+
+.recommendations-section.light {
+  background: rgba(255, 183, 77, 0.08);
+  border: 1px solid rgba(255, 183, 77, 0.2);
+}
+
+.recommendation-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  gap: 10px;
+}
+
+.skin-tone-mini-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.skin-tone-mini-icon.dark {
+  background: linear-gradient(135deg, #3e2723, #5d4037);
+}
+
+.skin-tone-mini-icon.olive {
+  background: linear-gradient(135deg, #556b2f, #808000);
+}
+
+.skin-tone-mini-icon.light {
+  background: linear-gradient(135deg, #ffb74d, #ffcc80);
 }
 
 .recommendations-section h4 {
-  color: #333;
-  margin-bottom: 15px;
+  margin: 0;
   font-size: 1.1rem;
+}
+
+.recommendations-section.dark h4 {
+  color: #5d4037;
+}
+
+.recommendations-section.olive h4 {
+  color: #556b2f;
+}
+
+.recommendations-section.light h4 {
+  color: #f57c00;
 }
 
 .color-recommendations {

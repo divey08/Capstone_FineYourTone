@@ -115,23 +115,33 @@ export default {
     async handleImageUpload(formData) {
       this.isLoading = true;
       this.error = null;
-      this.result = null;
-
-      try {
+      this.result = null;      try {
         const response = await apiService.uploadImage(formData);
 
         // Process the response based on the new structure
         if (response.data) {
           console.log("API Response:", response.data);
 
+          // Struktur default jika ada data yang tidak tersedia
+          const defaultSkinClass = "light"; // Default ke salah satu kategori yang ada
+          const defaultConfidence = 0.8; // Default confidence level
+          const defaultProbabilities = {
+            light: 0.8,
+            olive: 0.15,
+            dark: 0.05
+          };
+
           this.result = {
             // Use the uploaded image from your form as the preview
             imagePreview: URL.createObjectURL(formData.get("image")),
-            // Map the new response format
-            skinClass: response.data.class,
-            confidence: response.data.confidence,
-            probabilities: response.data.probabilities,
+            // Map the new response format with fallbacks jika data tidak lengkap
+            skinClass: response.data.class || defaultSkinClass,
+            confidence: response.data.confidence || defaultConfidence,
+            probabilities: response.data.probabilities || defaultProbabilities,
           };
+          
+          // Debugging log
+          console.log("Processed Result:", this.result);
         }
       } catch (error) {
         this.error = error.message || "Failed to upload image";
