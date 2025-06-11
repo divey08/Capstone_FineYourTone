@@ -83,19 +83,7 @@ export default {
 </script>
 
 <style scoped>
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 15px 0;
-  z-index: 1000;
-  transition: all 0.4s ease;
-  backdrop-filter: blur(16px);
-  background-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-}
+/* CSS telah dipindahkan ke folder styles/style.css */
 
 .header.scrolled {
   padding: 12px 0;

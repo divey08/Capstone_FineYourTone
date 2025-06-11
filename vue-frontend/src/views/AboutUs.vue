@@ -11,24 +11,24 @@
       </div>
       <div class="content-box">
         <p class="feature-text">
-          <strong>FineYourTone</strong> adalah inovasi terdepan dalam teknologi analisis warna kulit berbasis AI yang membantu Anda mendeteksi tone dan undertone kulit secara otomatis melalui foto. 
+          <strong>FineYourTone</strong> adalah aplikasi berbasis web yang membantu Anda menemukan pilihan warna yang paling sesuai dengan karakter kulit Anda. Cukup dengan mengunggah foto, sistem akan menganalisis warna kulit secara otomatis dan memberikan rekomendasi warna terbaik untuk digunakan dalam memilih pakaian, makeup, atau aksesori, agar penampilan Anda terlihat lebih serasi dan menonjol.
         </p>
-        <div class="feature-grid">
-          <div class="feature-item" data-aos="zoom-in" data-aos-delay="200">
-            <i class="fas fa-camera"></i>
-            <h3>Deteksi Akurat</h3>
-            <p>Analisis warna kulit dengan teknologi AI canggih</p>
-          </div>
-          <div class="feature-item" data-aos="zoom-in" data-aos-delay="300">
-            <i class="fas fa-magic"></i>
-            <h3>Rekomendasi Personal</h3>
-            <p>Saran produk kecantikan yang sesuai dengan tone kulit Anda</p>
-          </div>
-          <div class="feature-item" data-aos="zoom-in" data-aos-delay="400">
-            <i class="fas fa-shield-alt"></i>
-            <h3>Privasi Terjamin</h3>
-            <p>Pemrosesan lokal tanpa penyimpanan foto pengguna</p>
-          </div>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-item" data-aos="zoom-in" data-aos-delay="200">
+          <i class="fas fa-camera"></i>
+          <h3>Deteksi Akurat</h3>
+          <p>Menggunakan sistem deteksi yang akurat dan terpercaya untuk memberikan hasil analisis yang konsisten</p>
+        </div>
+        <div class="feature-item" data-aos="zoom-in" data-aos-delay="300">
+          <i class="fas fa-magic"></i>
+          <h3>Rekomendasi Personal</h3>
+          <p>Saran produk kecantikan yang sesuai dengan tone kulit Anda</p>
+        </div>
+        <div class="feature-item" data-aos="zoom-in" data-aos-delay="400">
+          <i class="fas fa-shield-alt"></i>
+          <h3>Privasi Terjamin</h3>
+          <p>Pemrosesan lokal tanpa penyimpanan foto pengguna</p>
         </div>
       </div>
     </section>
@@ -107,4 +107,6 @@ export default {
 }
 </script>
 
-<!-- CSS dipindahkan ke style.css -->
+<style scoped>
+/* CSS telah dipindahkan ke folder styles/style.css */
+</style>

@@ -61,5 +61,5 @@ export default {
 </script>
 
 <style scoped>
-/* CSS sudah dipindahkan ke style.css */
+/* CSS telah dipindahkan ke folder styles/style.css */
 </style>

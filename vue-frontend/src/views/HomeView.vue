@@ -144,5 +144,5 @@ export default {
 </script>
 
 <style scoped>
-/* CSS untuk HomeView telah dipindahkan ke file style.css */
+/* CSS telah dipindahkan ke folder styles/style.css */
 </style>

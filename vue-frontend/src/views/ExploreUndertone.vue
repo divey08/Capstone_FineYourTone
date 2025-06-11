@@ -94,4 +94,6 @@ export default {
 }
 </script>
 
-<!-- CSS dipindahkan ke style.css -->
+<style scoped>
+/* CSS telah dipindahkan ke folder styles/style.css */
+</style>
