@@ -29,7 +29,7 @@
             <p>Menggunakan sistem deteksi yang akurat dan terpercaya untuk memberikan hasil analisis yang konsisten.</p>
             <div class="feature-hover">
               <i class="fas fa-check-circle"></i>
-              <span>80% Akurat</span>
+              <span>90% Akurat</span>
             </div>
           </div>
           
