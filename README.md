@@ -47,12 +47,6 @@ cd Capstone_FineYourTone
 pip install -r requirements.txt
 ```
 
-3. Run the Flask backend server
-```bash
-cd fineyourtone
-python app.py
-```
-
 The backend server will start at `http://localhost:5000`.
 
 ### Frontend Setup
@@ -82,7 +76,7 @@ The frontend will be available at `http://localhost:5173`.
 
 1. **Home Page**: Learn about the application and its features
 2. **Testing**: Upload your photo to detect your skin tone
-3. **Explore Undertone**: Learn about different undertones and matching colors
+3. **Explore Skintone**: Learn about different undertones and matching colors
 4. **User Feedback**: Share your experience with the application
 
 ## How It Works
