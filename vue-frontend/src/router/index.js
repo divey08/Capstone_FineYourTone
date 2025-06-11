@@ -6,27 +6,47 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    meta: { 
+      requiresInternet: false, // Home page available offline
+      cacheForOffline: true
+    }
   },
   {
     path: '/testing',
     name: 'testing',
-    component: TestingView
+    component: TestingView,
+    meta: {
+      requiresInternet: true, // Testing feature requires internet
+      cacheForOffline: false
+    }
   },
   {
     path: '/explore-undertone',
     name: 'explore-undertone',
-    component: () => import('@/views/ExploreUndertone.vue')
+    component: () => import('@/views/ExploreUndertone.vue'),
+    meta: {
+      requiresInternet: false, // Static content about undertones
+      cacheForOffline: true
+    }
   },
   {
     path: '/about',
     name: 'about',
-    component: () => import('@/views/AboutUs.vue')
+    component: () => import('@/views/AboutUs.vue'),
+    meta: {
+      requiresInternet: false, // Static content about the team
+      cacheForOffline: true
+    }
   },
   {
     path: '/feedback',
     name: 'feedback',
-    component: () => import('@/views/Feedback.vue')
+    component: () => import('@/views/Feedback.vue'),
+    meta: {
+      requiresInternet: true, // Sending feedback requires internet
+      cacheForOffline: false
+    }
   },
   // Redirect all unmatched routes to home
   {

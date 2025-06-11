@@ -6,7 +6,26 @@ const apiClient = axios.create({
   headers: {
     Accept: "application/json",
   },
+  // Request timeout after 15 seconds
+  timeout: 15000
 });
+
+// Add interceptor to handle offline situations
+apiClient.interceptors.request.use(
+  config => {
+    if (!navigator.onLine) {
+      // If offline, reject the request with a custom error
+      return Promise.reject({
+        response: {
+          status: 0,
+          data: { message: 'You are currently offline. Please check your internet connection.' }
+        }
+      });
+    }
+    return config;
+  },
+  error => Promise.reject(error)
+);
 
 // Perbaikan untuk deteksi kulit yang lebih akurat
 const improveDetection = (response) => {
@@ -115,6 +134,12 @@ const improveDetection = (response) => {
 export default {
   // Upload image for prediction with the new API format
   async uploadImage(formData) {
+    // Check if offline before making the request
+    if (!navigator.onLine) {
+      console.error('Network is offline');
+      throw new Error('Anda sedang offline. Silakan periksa koneksi internet Anda.');
+    }
+    
     // Ensure multipart/form-data is set without manual boundary
     try {
       const response = await apiClient.post("/predict", formData, {
@@ -124,16 +149,53 @@ export default {
         // Adding timeout to prevent long waits
         timeout: 30000,
       });
-      
-      // Periksa gambar untuk memperbaiki deteksi kulit
+        // Periksa gambar untuk memperbaiki deteksi kulit
       const enhancedResponse = improveDetection(response);
       console.log("Original response:", response.data);
       console.log("Enhanced response:", enhancedResponse.data);
       
+      // Store successful response in localStorage for potential offline access
+      try {
+        const cachedResponses = JSON.parse(localStorage.getItem('cachedAPIResponses') || '{}');
+        // Keep only the last 5 successful responses to avoid storage issues
+        const responseKeys = Object.keys(cachedResponses);
+        if (responseKeys.length > 4) {
+          delete cachedResponses[responseKeys[0]];
+        }
+        
+        // Store with timestamp
+        const responseKey = `response_${Date.now()}`;
+        cachedResponses[responseKey] = {
+          data: enhancedResponse.data,
+          timestamp: Date.now()
+        };
+        
+        localStorage.setItem('cachedAPIResponses', JSON.stringify(cachedResponses));
+      } catch (storageError) {
+        console.error('Error storing response in localStorage:', storageError);
+      }
+      
       return enhancedResponse;
     } catch (error) {
       console.error("Error in API call:", error);
-      throw error;
+      
+      // Handle network connectivity errors specifically
+      if (!navigator.onLine || (error.response && error.response.status === 0)) {
+        throw {
+          message: "Anda sedang offline. Silakan periksa koneksi internet Anda.",
+          details: "Network disconnected",
+          status: 0,
+          offline: true
+        };
+      }
+      
+      // Return structured error object for other errors
+      throw {
+        message: "Terjadi kesalahan saat memproses gambar. Silakan coba lagi.",
+        details: error.message || "Unknown error",
+        status: error.response ? error.response.status : 500,
+        offline: false
+      };
     }
   },
 

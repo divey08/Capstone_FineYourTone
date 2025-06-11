@@ -1,21 +1,26 @@
 <script>
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
+import PwaInstallPrompt from './components/PwaInstallPrompt.vue'
+import SimpleOfflineBanner from './components/SimpleOfflineBanner.vue'
 
 export default {
   name: 'App',
   components: {
     AppHeader,
-    AppFooter
+    AppFooter,
+    PwaInstallPrompt,
+    SimpleOfflineBanner
   }
 }
 </script>
 
-<template>
-  <div class="app">
+<template>  <div class="app">
+    <SimpleOfflineBanner />
     <AppHeader />
     <router-view />
     <AppFooter />
+    <PwaInstallPrompt />
   </div>
 </template>
 

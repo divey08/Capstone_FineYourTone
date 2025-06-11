@@ -2,11 +2,12 @@
   "name": "vue-frontend",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
-  "scripts": {
+  "type": "module",  "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-icons": "node generate-pwa-icons.js",
+    "create-favicon": "node create-favicon-ico.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.50.0",
@@ -19,6 +20,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.3",
-    "vite": "^6.3.5"
+    "sharp": "^0.34.2",
+    "vite": "^6.3.5",
+    "vite-plugin-pwa": "^1.0.0"
   }
 }

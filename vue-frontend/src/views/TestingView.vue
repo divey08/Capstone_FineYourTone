@@ -15,7 +15,19 @@
       </div>
     </div>
 
-    <section id="upload-section" class="testing-section">
+    <!-- Offline warning message -->
+    <div v-if="!isOnline" class="offline-message">
+      <div class="offline-message-content">
+        <i class="fas fa-wifi-slash"></i>
+        <h3>Anda sedang offline</h3>
+        <p>Fitur analisis warna kulit memerlukan koneksi internet untuk memproses gambar.</p>
+        <button @click="checkConnection" class="retry-connection-btn">
+          Periksa Koneksi
+        </button>
+      </div>
+    </div>
+
+    <section id="upload-section" class="testing-section" v-if="isOnline">
       <div class="container">
         <div class="section-header" data-aos="fade-up">
           <h2 class="section-title">
@@ -25,7 +37,7 @@
             Unggah gambar wajah Anda untuk mendapatkan analisis warna kulit yang
             akurat
           </p>
-        </div>        <div class="upload-container">
+        </div><div class="upload-container">
           <div class="upload-box" data-aos="fade-right" data-aos-delay="100">
             <ImageUploader @upload="handleImageUpload" @reset="handleReset" />
           </div>
@@ -101,14 +113,41 @@ export default {
   components: {
     ImageUploader,
     ResultsDisplay,
-  },
-  data() {
+  },  data() {
     return {
       result: null,
       isLoading: false,
       error: null,
+      isOnline: navigator.onLine
     };
+  },
+  mounted() {
+    // Monitor online/offline status
+    window.addEventListener('online', this.updateOnlineStatus);
+    window.addEventListener('offline', this.updateOnlineStatus);
+  },
+  beforeUnmount() {
+    // Clean up event listeners
+    window.removeEventListener('online', this.updateOnlineStatus);
+    window.removeEventListener('offline', this.updateOnlineStatus);
   },  methods: {
+    updateOnlineStatus() {
+      this.isOnline = navigator.onLine;
+      if (!this.isOnline) {
+        // Reset loading state if connection was lost during processing
+        this.isLoading = false;
+      }
+    },
+    
+    checkConnection() {
+      // Check if back online
+      this.isOnline = navigator.onLine;
+      if (this.isOnline) {
+        // If we're back online, refresh component
+        this.$forceUpdate();
+      }
+    },
+    
     handleReset() {
       // Reset all data when user clicks on reset button
       this.result = null;
@@ -427,6 +466,59 @@ export default {
   color: #666;
   line-height: 1.6;
   font-size: 1.1rem;
+}
+
+/* Offline message styles */
+.offline-message {
+  background: #fff;
+  border-radius: 15px;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 2rem auto;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.offline-message-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.offline-message i {
+  font-size: 3rem;
+  color: #f47a9e;
+  margin-bottom: 1rem;
+  display: block;
+  transform: rotate(45deg);
+}
+
+.offline-message h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.offline-message p {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.retry-connection-btn {
+  background: linear-gradient(135deg, #f47a9e, #f6bdd9);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.retry-connection-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(244, 122, 158, 0.3);
 }
 
 @keyframes float {
