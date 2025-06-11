@@ -59,15 +59,15 @@
                 <i class="fas fa-camera"></i> Gunakan Kamera
               </button>
             </div>
-          </div>
-
-          <transition name="fade" mode="out-in">
+          </div>          <transition name="fade" mode="out-in">
             <button
               v-if="selectedFile"
               type="submit"
               class="submit-btn"
+              :class="{ 'processing': isLoading }"
               :disabled="isLoading">
               <span v-if="isLoading" class="loading-spinner"></span>
+              <i v-if="!isLoading" class="fas fa-magic"></i>
               <span>{{ isLoading ? "Processing..." : "Analyze Image" }}</span>
             </button>
             <div v-else class="empty-btn-space"></div>
@@ -239,21 +239,26 @@ export default {
     },
     uploadImage() {
       if (!this.selectedFile) return;
-
+      
+      if (this.isLoading) return; // Prevent multiple submissions
+      
       this.isLoading = true;
 
-      // Create a form data object with the image file
-      const formData = new FormData();
+      // Create visual feedback with slight delay for better UX
+      this.$nextTick(() => {
+        // Create a form data object with the image file
+        const formData = new FormData();
 
-      // Make sure the file is properly named with an extension
-      const file = this.selectedFile;
-      const fileName = file.name || "image.jpg";
+        // Make sure the file is properly named with an extension
+        const file = this.selectedFile;
+        const fileName = file.name || "image.jpg";
 
-      // Append the file to the form data with the key "image" as expected by the backend
-      formData.append("image", file, fileName);
+        // Append the file to the form data with the key "image" as expected by the backend
+        formData.append("image", file, fileName);
 
-      // Emit event with form data for parent to handle
-      this.$emit("upload", formData);
+        // Emit event with form data for parent to handle
+        this.$emit("upload", formData);
+      });
     },
     onDropFile(e) {
       this.isDragging = false;
@@ -265,12 +270,14 @@ export default {
     },
     triggerFileInput() {
       this.$refs.fileInput.click();
-    },
-    resetForm() {
+    },    resetForm() {
       this.selectedFile = null;
       this.imagePreview = null;
       this.capturedImage = null;
+      this.isLoading = false;
       this.$refs.fileInput.value = "";
+      // Emit reset event to parent component
+      this.$emit("reset");
     },
 
     // Metode untuk kamera
@@ -416,6 +423,9 @@ export default {
       // Show video again
       this.$refs.videoElement.style.display = "block";
       this.$refs.canvasElement.style.display = "none";
+      
+      // Emit reset event to parent component to clear previous results
+      this.$emit("reset");
     },
 
     acceptImage() {
@@ -432,9 +442,7 @@ export default {
           this.imagePreview = this.capturedImage;
           this.closeCameraModal();
         });
-    },
-
-    closeCameraModal() {
+    },    closeCameraModal() {
       this.showCameraModal = false;
       this.stopCamera();
       this.capturedImage = null;
@@ -446,6 +454,11 @@ export default {
 
       if (this.$refs.canvasElement) {
         this.$refs.canvasElement.style.display = "none";
+      }
+      
+      // If no image was selected/captured, emit reset event to clear any previous results
+      if (!this.selectedFile) {
+        this.$emit("reset");
       }
     },
 
@@ -675,29 +688,79 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 200px;
+  width: 220px;
   background: linear-gradient(135deg, #f47a9e, #f6bdd9);
   color: white;
   border: none;
-  padding: 14px 28px;
+  padding: 16px 28px;
   border-radius: 30px;
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   box-shadow: 0 8px 20px rgba(244, 122, 158, 0.3);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  margin: 10px auto;
+  letter-spacing: 0.5px;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+  transition: all 0.5s ease;
+  z-index: -1;
+}
+
+.submit-btn i {
+  margin-right: 10px;
+  font-size: 18px;
+  transform: translateY(1px);
 }
 
 .submit-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 25px rgba(244, 122, 158, 0.4);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 25px rgba(244, 122, 158, 0.5);
+}
+
+.submit-btn:hover::before {
+  left: 100%;
+}
+
+.submit-btn:active {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(244, 122, 158, 0.4);
+}
+
+.submit-btn.processing {
+  background: linear-gradient(135deg, #f68fb0, #f8c7e0);
+  animation: pulse 1.5s infinite;
 }
 
 .submit-btn:disabled {
-  background: #b8b8b8;
+  background: #c0c0c0;
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
+  opacity: 0.8;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(244, 122, 158, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(244, 122, 158, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(244, 122, 158, 0);
+  }
 }
 
 .empty-btn-space {
@@ -705,13 +768,15 @@ export default {
 }
 
 .loading-spinner {
-  width: 16px;
-  height: 16px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.15);
   border-top: 3px solid white;
+  border-right: 3px solid white;
   border-radius: 50%;
-  margin-right: 10px;
-  animation: spin 1s linear infinite;
+  margin-right: 12px;
+  animation: spin 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 @keyframes spin {
@@ -766,6 +831,18 @@ export default {
 .fade-leave-to {
   opacity: 0;
   transform: translateY(10px);
+}
+
+/* Improved tap/click effect for mobile devices */
+@media (max-width: 767px) {
+  .submit-btn {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .submit-btn:active {
+    transform: scale(0.97);
+    transition: transform 0.1s;
+  }
 }
 
 /* Gaya untuk modal kamera */
@@ -1016,6 +1093,17 @@ export default {
   .retake-btn {
     padding: 10px 16px;
     font-size: 13px;
+  }
+  
+  .submit-btn {
+    width: 100%;
+    max-width: 200px;
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+  
+  .submit-btn i {
+    font-size: 16px;
   }
 }
 

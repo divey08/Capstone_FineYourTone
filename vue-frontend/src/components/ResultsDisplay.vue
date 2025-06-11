@@ -115,6 +115,15 @@ export default {
       default: false,
     },
   },
+  watch: {
+    // Watch the result prop for changes - especially when it becomes null
+    result(newResult) {
+      if (!newResult) {
+        // Reset component state when result is cleared
+        this.showRecommendations = false;
+      }
+    }
+  },
   data() {
     return {
       showRecommendations: false,

@@ -11,7 +11,7 @@
       </div>
       <div class="content-box">
         <p class="feature-text">
-          <strong>FineYourTone</strong> adalah aplikasi berbasis web yang membantu Anda menemukan pilihan warna yang paling sesuai dengan karakter kulit Anda. Cukup dengan mengunggah foto, sistem akan menganalisis warna kulit secara otomatis dan memberikan rekomendasi warna terbaik untuk digunakan dalam memilih pakaian, makeup, atau aksesori, agar penampilan Anda terlihat lebih serasi dan menonjol.
+          <strong>FineYourTone</strong> adalah aplikasi berbasis web yang membantu Anda menemukan pilihan warna yang paling sesuai dengan karakter kulit Anda. Cukup dengan mengunggah foto, sistem akan menganalisis warna kulit secara otomatis dan memberikan rekomendasi warna terbaik untuk digunakan dalam memilih pakaian, makeup, atau aksesori yang paling cocok untuk tampilan terbaikmu.
         </p>
       </div>
       <div class="feature-grid">

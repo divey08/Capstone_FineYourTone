@@ -25,11 +25,9 @@
             Unggah gambar wajah Anda untuk mendapatkan analisis warna kulit yang
             akurat
           </p>
-        </div>
-
-        <div class="upload-container">
+        </div>        <div class="upload-container">
           <div class="upload-box" data-aos="fade-right" data-aos-delay="100">
-            <ImageUploader @upload="handleImageUpload" />
+            <ImageUploader @upload="handleImageUpload" @reset="handleReset" />
           </div>
           <div class="result-box" data-aos="fade-left" data-aos-delay="200">
             <ResultsDisplay :result="result" :loading="isLoading" />
@@ -110,8 +108,15 @@ export default {
       isLoading: false,
       error: null,
     };
-  },
-  methods: {
+  },  methods: {
+    handleReset() {
+      // Reset all data when user clicks on reset button
+      this.result = null;
+      this.error = null;
+      this.isLoading = false;
+      console.log("Reset dilakukan, semua hasil klasifikasi dihapus");
+    },
+    
     async handleImageUpload(formData) {
       this.isLoading = true;
       this.error = null;
