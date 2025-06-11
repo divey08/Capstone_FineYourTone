@@ -119,24 +119,24 @@ export default {
     return {
       showRecommendations: false,
       colorRecommendations: {
-        dark: [
-          { name: 'Putih', hex: '#FFFFFF' },
-          { name: 'Merah Muda', hex: '#FFB6C1' },
-          { name: 'Biru Muda', hex: '#ADD8E6' },
-          { name: 'Kuning Pastel', hex: '#FFFACD' }
-        ],
-        light: [
-          { name: 'Navy', hex: '#000080' },
-          { name: 'Hijau Tua', hex: '#006400' },
-          { name: 'Burgundy', hex: '#800020' },
-          { name: 'Ungu Tua', hex: '#4B0082' }
-        ],
-        olive: [
-          { name: 'Coklat Kayu', hex: '#DEB887' },
-          { name: 'Hijau Olive', hex: '#808000' },
-          { name: 'Coral', hex: '#FF7F50' },
-          { name: 'Turquoise', hex: '#40E0D0' }
-        ]
+         dark: [
+    { name: 'Kuning Mustard', hex: '#FFDB58' },       // Complementary, menonjol
+    { name: 'Merah Anggur (Wine)', hex: '#722F37' },  // Deep rich, elegant
+    { name: 'Emerald Green', hex: '#50C878' },        // Vibrant, fresh contrast
+    { name: 'Royal Blue', hex: '#4169E1' }            // Harmonious cool tone
+  ],
+  light: [
+    { name: 'Dusty Pink', hex: '#D8A7B1' },           // Soft warm tone
+    { name: 'Soft Sage', hex: '#B2AC88' },            // Earthy, calming
+    { name: 'Midnight Blue', hex: '#191970' },        // Kontras, elegan
+    { name: 'Plum', hex: '#8E4585' }                  // Rich complementary
+  ],
+  olive: [
+    { name: 'Terracotta', hex: '#E2725B' },           // Warm, earthy
+    { name: 'Burnt Sienna', hex: '#E97451' },         // Complementary with olive
+    { name: 'Teal', hex: '#008080' },                 // Cool, balancing tone
+    { name: 'Champagne', hex: '#F7E7CE' }             // Soft highlight, harmony
+  ]
       }
     };
   },
@@ -146,7 +146,7 @@ export default {
       const labels = {
         dark: "Warna Kulit Gelap",
         light: "Warna Kulit Terang",
-        olive: "Warna Kulit Zaitun",
+        olive: "Warna Kulit Olive",
       };
 
       return labels[toneType] || toneType;
