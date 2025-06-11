@@ -28,6 +28,7 @@
     </div>
 
     <section id="upload-section" class="testing-section" v-if="isOnline">
+    
       <div class="container">
         <div class="section-header" data-aos="fade-up">
           <h2 class="section-title">
@@ -37,16 +38,8 @@
             Unggah gambar wajah Anda untuk mendapatkan analisis warna kulit yang
             akurat
           </p>
-        </div><div class="upload-container">
-          <div class="upload-box" data-aos="fade-right" data-aos-delay="100">
-            <ImageUploader @upload="handleImageUpload" @reset="handleReset" />
-          </div>
-          <div class="result-box" data-aos="fade-left" data-aos-delay="200">
-            <ResultsDisplay :result="result" :loading="isLoading" />
-          </div>
         </div>
-
-        <div class="info-box" data-aos="fade-up" data-aos-delay="300">
+                <div class="info-box" data-aos="fade-up" data-aos-delay="300">
           <div class="info-icon">
             <i class="fas fa-info-circle"></i>
           </div>
@@ -56,9 +49,21 @@
               Sistem kami dirancang untuk menganalisis warna kulit Anda dan
               memberikan hasil yang akurat. Pastikan foto diambil dengan
               pencahayaan yang baik untuk mendapatkan hasil terbaik.
+              <strong>Disarankan untuk mengunggah foto yang hanya menampilkan wajah Anda saja, </strong>
+              tanpa objek lain di sekitarnya, agar analisis warna kulit tidak terganggu. 
+              Kehadiran objek lain atau latar belakang yang ramai dapat memengaruhi hasil deteksi.
             </p>
           </div>
         </div>
+        <div class="upload-container">
+          <div class="upload-box" data-aos="fade-right" data-aos-delay="100">
+            <ImageUploader @upload="handleImageUpload" @reset="handleReset" />
+          </div>
+          <div class="result-box" data-aos="fade-left" data-aos-delay="200">
+            <ResultsDisplay :result="result" :loading="isLoading" />
+          </div>
+        </div>
+
       </div>
     </section>
 
