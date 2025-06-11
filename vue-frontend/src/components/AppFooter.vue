@@ -2,25 +2,19 @@
   <footer class="footer">
       <div class="footer-content">
       <div class="footer-container container-fluid">
-        <div class="footer-brand">
-          <div class="footer-logo">
+        <div class="footer-brand">          <div class="footer-logo">
             <div class="logo-wrapper">
-              <i class="fas fa-palette logo-icon"></i>
-              <div class="logo-circles">
-                <span class="circle"></span>
-                <span class="circle"></span>
-                <span class="circle"></span>
-              </div>
+              <img src="/logo.png" alt="FineYourTone Logo" class="footer-logo-image" />
             </div>
             <div class="logo-text">
               <span class="fine">Fine<span class="your">Your</span></span>
               <span class="tone">Tone</span>
             </div>
           </div>
-          <p class="footer-desc">Skin Tone &amp; Undertone Detection.<br>Capstone Project Dicoding Camp &mdash; Supported by DBS Foundation.</p>
+          <p class="footer-desc"> <br>Skin Tone <br>Color recommendations that match your skin tone perfectly.<br>Capstone Project Dicoding Camp &mdash; Supported by DBS Foundation.</p>
           
           <div class="social-links">
-            <a href="#" class="social-link instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.instagram.com/fineyourtone?igsh=MXY2OWt4MnR0YjlrYg==" class="social-link instagram"><i class="fab fa-instagram"></i></a>
             <a href="#" class="social-link twitter"><i class="fab fa-twitter"></i></a>
             <a href="#" class="social-link linkedin"><i class="fab fa-linkedin"></i></a>
             <a href="#" class="social-link github"><i class="fab fa-github"></i></a>

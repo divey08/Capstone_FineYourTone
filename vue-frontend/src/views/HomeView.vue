@@ -29,7 +29,7 @@
             <p>Menggunakan sistem deteksi yang akurat dan terpercaya untuk memberikan hasil analisis yang konsisten.</p>
             <div class="feature-hover">
               <i class="fas fa-check-circle"></i>
-              <span>99% Akurat</span>
+              <span>80% Akurat</span>
             </div>
           </div>
           
@@ -43,7 +43,7 @@
             <p>Dapatkan hasil analisis warna kulit secara cepat tanpa perlu menunggu lama.</p>
             <div class="feature-hover">
               <i class="fas fa-clock"></i>
-              <span>< 2 Detik</span>
+              <span>< 5 Detik</span>
             </div>
           </div>
           
