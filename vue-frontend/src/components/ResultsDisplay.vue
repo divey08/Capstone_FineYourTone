@@ -42,10 +42,9 @@
                   </div>
                   <div class="skin-tone-label">
                     {{ getSkinToneLabel(result.skinClass || getHighestProbabilitySkinType()) }}
-                  </div>
-                  <div class="confidence">
+                  </div>                  <div class="confidence">
                     Confidence:
-                    {{ ((result.confidence || 0) * 100).toFixed(0) }}%
+                    {{ result.confidence ? ((result.confidence) * 100).toFixed(0) : 0 }}%
                   </div>
                   <button class="recommendation-button" @click="showRecommendations = true" v-if="result && !showRecommendations">
                     Lihat Rekomendasi Warna
@@ -65,12 +64,10 @@
                       <span class="color-name">{{ color.name }}</span>
                     </div>
                   </div>
-                </div>
-
-                <div class="probabilities">
+                </div>                <div class="probabilities">
                   <h4>Probabilities:</h4>
                   <div class="probability-bars">
-                <div
+                    <div
                       v-for="(value, type) in result.probabilities || {}"
                       :key="type"
                       :class="['probability-item', type]">
@@ -130,7 +127,7 @@ export default {
       colorRecommendations: {
          dark: [
     { name: 'Kuning Mustard', hex: '#FFDB58' },       // Complementary, menonjol
-    { name: 'Merah Anggur (Wine)', hex: '#722F37' },  // Deep rich, elegant
+    { name: 'Merah Anggur', hex: '#722F37' },  // Deep rich, elegant
     { name: 'Emerald Green', hex: '#50C878' },        // Vibrant, fresh contrast
     { name: 'Royal Blue', hex: '#4169E1' }            // Harmonious cool tone
   ],
@@ -160,188 +157,76 @@ export default {
 
       return labels[toneType] || toneType;
     },    getColorRecommendations(skinType) {
-      // Multi-factor analysis untuk rekomendasi warna yang lebih akurat
-      let detectedSkinType = skinType || "light";
+      // Gunakan skin type yang diberikan, jika tidak ada gunakan data API
+      let detectedSkinType = skinType;
       
-      // Threshold yang lebih rendah untuk deteksi kulit gelap
-      const confidenceThresholds = {
-        dark: 0.15,   // Significantly lower threshold for dark skin
-        olive: 0.25,  // Lower threshold for olive skin
-        light: 0.35   // Higher threshold for light skin to prevent false positives
-      };
-      
-      // Analisis metadata visual untuk deteksi kulit
-      if (this.result && this.imageUrl) {
-        const imgUrl = this.imageUrl.toLowerCase();
-        
-        // Enhanced keywords for better detection
-        const darkKeywords = ['dark', 'gelap', 'hitam', 'negro', 'black', 'african'];
-        const oliveKeywords = ['olive', 'medium', 'zaitun', 'tan', 'sawo', 'asian'];
-        const lightKeywords = ['light', 'fair', 'terang', 'putih', 'white', 'caucasian'];
-        
-        // Deteksi berbasis kata kunci yang lebih lengkap
-        if (darkKeywords.some(keyword => imgUrl.includes(keyword))) {
-          console.log("Detected dark skin from image metadata");
-          detectedSkinType = "dark";
-        } else if (oliveKeywords.some(keyword => imgUrl.includes(keyword))) {
-          console.log("Detected olive skin from image metadata");
-          detectedSkinType = "olive";
-        } else if (lightKeywords.some(keyword => imgUrl.includes(keyword))) {
-          console.log("Detected light skin from image metadata");
-          detectedSkinType = "light";
-        }
+      // Jika tidak ada skinType yang diberikan, ambil dari rawApiData jika tersedia
+      if (!detectedSkinType && this.result && this.result.rawApiData) {
+        detectedSkinType = this.result.rawApiData.prediction || this.result.rawApiData.class;
+        console.log(`Using API provided skin type: ${detectedSkinType}`);
       }
       
-      // Visual cues analysis on detected_labels if available
-      if (this.result && this.result.detected_labels) {
-        const labels = this.result.detected_labels;
-        if (labels["dark skin"] && labels["dark skin"] >= 0.1) {
-          console.log(`Dark skin detected in labels with score ${labels["dark skin"].toFixed(2)}`);
-          detectedSkinType = "dark";
-        }
-      }
-      
-      // Analisis probabilitas dengan sensitivitas yang ditingkatkan
-      if (this.result && this.result.probabilities) {
+      // Gunakan hasil probabilitas tertinggi jika masih tidak ada skin type
+      if (!detectedSkinType && this.result && this.result.probabilities) {
         const probs = this.result.probabilities;
+        let highestProb = 0;
         
-        console.log(`Analyzing probabilities: dark=${probs.dark?.toFixed(2) || 0}, olive=${probs.olive?.toFixed(2) || 0}, light=${probs.light?.toFixed(2) || 0}`);
-        
-        // Enhanced dark skin detection
-        // Deteksi kulit gelap bahkan dengan nilai probability yang lebih rendah
-        if (probs.dark > confidenceThresholds.dark || 
-           (probs.dark > 0.1 && probs.dark >= probs.olive * 0.7 && probs.dark >= probs.light * 0.7)) {
-          console.log(`Detected dark skin with probability ${(probs.dark * 100).toFixed(1)}%`);
-          detectedSkinType = "dark";
-        } 
-        // Deteksi olive skin with comparative analysis
-        else if (probs.olive > confidenceThresholds.olive || 
-                (probs.olive > 0.2 && probs.olive >= probs.light * 0.8)) {
-          console.log(`Detected olive skin with probability ${(probs.olive * 100).toFixed(1)}%`);
-          detectedSkinType = "olive";
-        } 
-        // Light skin requires higher confidence
-        else if (probs.light > confidenceThresholds.light && 
-                 probs.light > probs.olive * 1.2 && 
-                 probs.light > probs.dark * 1.5) {
-          console.log(`Detected light skin with high confidence ${(probs.light * 100).toFixed(1)}%`);
-          detectedSkinType = "light";
+        for (const [type, value] of Object.entries(probs)) {
+          if (value > highestProb) {
+            highestProb = value;
+            detectedSkinType = type;
+          }
         }
         
-        // Special case handling for mixed race or ambiguous results
-        if (Math.abs(probs.dark - probs.olive) < 0.1 && probs.dark > 0.15) {
-          console.log("Detected possibly mixed race with dark undertones, prioritizing dark skin");
-          detectedSkinType = "dark";
-        }
+        console.log(`Using highest probability skin type: ${detectedSkinType} (${highestProb.toFixed(2)})`);
       }
       
-      // Final visual check using image properties
-      if (detectedSkinType === "light" && this.shouldOverrideToDarkerTone()) {
-        console.log("Visual analysis suggests darker tone than detected, overriding");
-        // Check if olive is more likely than dark
-        if (this.result && this.result.probabilities && 
-            this.result.probabilities.olive > this.result.probabilities.dark) {
-          detectedSkinType = "olive";
-        } else {
-          detectedSkinType = "dark";
-        }
+      // Fallback ke default jika masih tidak ada deteksi
+      if (!detectedSkinType) {
+        console.log("No skin type detected, using default (light)");
+        detectedSkinType = "light";
       }
       
-      // Safety check - pastikan rekomendasi warna tersedia
+      // Pastikan rekomendasi warna tersedia untuk skin type ini
       if (!this.colorRecommendations[detectedSkinType]) {
         console.log(`No recommendations available for ${detectedSkinType}, using default`);
-        return this.colorRecommendations.light || [];
+        detectedSkinType = "light"; // Fallback ke light jika tidak ada rekomendasi
       }
       
       console.log(`Returning color recommendations for ${detectedSkinType} skin`);
       return this.colorRecommendations[detectedSkinType];
     },// Metode untuk mendapatkan warna dari probability tertinggi jika skinClass tidak tersedia
-    // Dengan perbaikan untuk akurasi deteksi kulit
+    // Dengan perbaikan untuk mengambil data langsung dari API
     getHighestProbabilitySkinType() {
-      // Analisis visual image untuk deteksi otomatis
-      if (this.result && this.imageUrl) {
-        // Gunakan image analysis
-        const imgUrl = this.imageUrl.toLowerCase();
-        
-        // Deteksi kontekstual berdasarkan nama file dan konten
-        const darkKeywords = ['dark', 'gelap', 'hitam', 'negro', 'black'];
-        const oliveKeywords = ['olive', 'medium', 'zaitun', 'tan', 'sawo'];
-        const lightKeywords = ['light', 'fair', 'terang', 'putih', 'white'];
-        
-        // Cari keyword yang cocok
-        const hasDarkKeyword = darkKeywords.some(keyword => imgUrl.includes(keyword));
-        const hasOliveKeyword = oliveKeywords.some(keyword => imgUrl.includes(keyword));
-        const hasLightKeyword = lightKeywords.some(keyword => imgUrl.includes(keyword));
-        
-        if (hasDarkKeyword) {
-          console.log("Prioritizing dark skin type based on image metadata");
-          return "dark";
-        } else if (hasOliveKeyword) {
-          console.log("Prioritizing olive skin type based on image metadata");
-          return "olive"; 
-        } else if (hasLightKeyword) {
-          console.log("Prioritizing light skin type based on image metadata");
-          return "light";
-        }
+      // Jika result memiliki skinClass atau prediksi yang jelas, langsung gunakan itu
+      if (this.result && (this.result.skinClass || this.result.rawApiData?.prediction)) {
+        const predictedClass = this.result.skinClass || this.result.rawApiData?.prediction;
+        console.log(`Using provided skin class/prediction: ${predictedClass}`);
+        return predictedClass;
       }
       
-      // Jika tidak ada probabilities data, gunakan heuristik gambar
+      // Jika tidak ada probabilities data, gunakan default safe fallback
       if (!this.result || !this.result.probabilities) {
-        // Coba analisis warna gambar untuk menentukan skin tone
-        if (this.result && this.result.detected_labels) {
-          const labels = this.result.detected_labels;
-          if (labels["dark skin"] && labels["dark skin"] >= 0.1) {
-            return "dark";
-          } else if (labels["medium skin"] && labels["medium skin"] >= 0.1) {
-            return "olive";
-          }
-        }
+        console.log("No probability data available, using default");
         return "light"; // Default fallback
       }
       
+      // Gunakan nilai probabilitas langsung tanpa pembobotan
       const probs = this.result.probabilities;
+      console.log("Determining skin type based on raw probabilities:", probs);
       
-      // Revisi threshold untuk deteksi akurat kulit gelap
-      // Kulit gelap sering memiliki nilai confidence lebih rendah namun tetap signifikan
-      if (probs.dark > 0.2 || 
-         (probs.dark >= 0.15 && probs.dark > probs.olive * 0.8 && probs.dark > probs.light * 0.8)) {
-        console.log(`Detected dark skin with probability ${(probs.dark * 100).toFixed(1)}%`);
-        return "dark";
-      }
-      
-      // Deteksi kulit olive/medium dengan threshold yang disesuaikan
-      if (probs.olive > 0.3 || 
-         (probs.olive >= 0.2 && probs.olive > probs.light * 0.7)) {
-        console.log(`Detected olive skin with probability ${(probs.olive * 100).toFixed(1)}%`);
-        return "olive";
-      }
-      
-      // Analisis probabilities dengan weighting yang lebih sensitif terhadap kulit gelap
-      const weights = {
-        dark: 1.5,    // Increase dark skin weight significantly
-        olive: 1.2,   // Moderate increase for olive skin
-        light: 0.9    // Slightly reduce light skin weight to prevent over-detection
-      };
-      
+      // Cari nilai tertinggi
       let highestType = null;
-      let highestScore = 0;
+      let highestValue = 0;
       
       for (const [type, value] of Object.entries(probs)) {
-        const weightedScore = value * (weights[type] || 1.0);
-        console.log(`${type} weighted score: ${weightedScore.toFixed(3)}`);
-        if (weightedScore > highestScore) {
-          highestScore = weightedScore;
+        if (value > highestValue) {
+          highestValue = value;
           highestType = type;
         }
       }
-        console.log(`Selected skin type ${highestType} with weighted score ${highestScore.toFixed(3)}`);
       
-      // Additional safety check for edge cases
-      if (highestType === "light" && probs.dark > 0.15) {
-        console.log("Overriding to dark skin due to significant dark skin probability");
-        return "dark";
-      }
-      
+      console.log(`Selected skin type ${highestType} with raw value ${highestValue.toFixed(3)}`);
       return highestType || "light";
     },
     

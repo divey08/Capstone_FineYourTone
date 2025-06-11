@@ -32,101 +32,64 @@ const improveDetection = (response) => {
   // Pastikan response dan data ada
   if (!response || !response.data) return response;
 
-  const data = response.data;
-  
-  // Analisis metadata gambar untuk konteks
-  const imgMetadata = {
-    fileName: data.img_path?.toLowerCase() || '',
-    containsDarkKeywords: false,
-    containsOliveKeywords: false,
-    containsLightKeywords: false
-  };
-  
-  // Cek keyword dalam metadata untuk mendapatkan informasi tambahan
-  imgMetadata.containsDarkKeywords = 
-    imgMetadata.fileName.includes('dark') || 
-    imgMetadata.fileName.includes('gelap') || 
-    imgMetadata.fileName.includes('hitam');
-  
-  imgMetadata.containsOliveKeywords = 
-    imgMetadata.fileName.includes('olive') || 
-    imgMetadata.fileName.includes('medium') || 
-    imgMetadata.fileName.includes('zaitun');
-    
-  imgMetadata.containsLightKeywords = 
-    imgMetadata.fileName.includes('light') || 
-    imgMetadata.fileName.includes('fair') || 
-    imgMetadata.fileName.includes('terang');
-  
-  // Perbaikan untuk label deteksi
-  if (data.detected_labels) {
-    // Tingkatkan akurasi deteksi kulit gelap
-    if (data.detected_labels["dark skin"] && data.detected_labels["dark skin"] > 0.15) {
-      // Tingkatkan nilai deteksi kulit gelap yang sering under-detected
-      const darkSkinBoost = imgMetadata.containsDarkKeywords ? 1.8 : 1.4;
-      data.detected_labels["dark skin"] = Math.min(0.95, data.detected_labels["dark skin"] * darkSkinBoost);
-      
-      // Sesuaikan label lain untuk menjaga keseimbangan
-      Object.keys(data.detected_labels).forEach(label => {
-        if (label !== "dark skin" && label.includes("skin")) {
-          data.detected_labels[label] *= 0.7;
-        }
-      });
-    }
-  }
+  // Log data asli untuk debugging
+  console.log("Original API data:", response.data);
 
-  // Perbaiki hasil untuk probabilities
-  if (data.probabilities) {
-    // Dapatkan nilai probabilitas saat ini
-    const { dark = 0, olive = 0, light = 0 } = data.probabilities;
-    
-    // Jika nilai deteksi kulit gelap signifikan tapi probabilities tidak mencerminkan itu
-    if ((dark < 0.5 && imgMetadata.containsDarkKeywords) || 
-        (data.detected_labels && data.detected_labels["dark skin"] > 0.4 && dark < 0.6)) {
-      
-      // Tingkatkan deteksi kulit gelap berdasarkan seberapa yakin kita
-      const darkConfidence = Math.max(
-        dark * 1.5, 
-        imgMetadata.containsDarkKeywords ? 0.75 : 0.6,
-        data.detected_labels?.["dark skin"] || 0
-      );
-      
-      // Distribusi probabilitas yang lebih seimbang
-      data.probabilities = {
-        dark: Math.min(darkConfidence, 0.92),
-        olive: Math.max(0.05, olive * 0.5),
-        light: Math.max(0.03, light * 0.3)
-      };
-      
-      // Normalisasi probabilitas
-      const total = data.probabilities.dark + data.probabilities.olive + data.probabilities.light;
-      data.probabilities = {
-        dark: data.probabilities.dark / total,
-        olive: data.probabilities.olive / total,
-        light: data.probabilities.light / total
-      };
-      
-      // Update kelas dan confidence
-      data.skinClass = "dark";
-      data.class = "dark";
-      data.confidence = data.probabilities.dark;
-    }
-    
-    // Perbaikan umum untuk memastikan probabilitas minimal
-    Object.keys(data.probabilities).forEach(key => {
-      data.probabilities[key] = Math.max(data.probabilities[key], 0.02);
-    });
-    
-    // Normalisasi final
-    const totalProb = data.probabilities.dark + data.probabilities.olive + data.probabilities.light;
-    if (totalProb > 0) {
-      data.probabilities = {
-        dark: data.probabilities.dark / totalProb,
-        olive: data.probabilities.olive / totalProb,
-        light: data.probabilities.light / totalProb
-      };
-    }
+  // Cek apakah respons memiliki struktur yang diharapkan
+  // Respons mungkin memiliki struktur: { status, message, data: { prediction, confidence, probabilities } }
+  let dataToProcess = response.data;
+  
+  // Jika ada struktur data di dalam data, gunakan itu
+  if (dataToProcess.data && typeof dataToProcess.data === 'object') {
+    console.log("API response has nested data structure, using data field");
+    dataToProcess = dataToProcess.data;
   }
+  
+  // Pastikan probabilities ada dan valid
+  if (!dataToProcess.probabilities) {
+    console.log("No probabilities in API response, creating default");
+    dataToProcess.probabilities = {
+      light: 0.33,
+      olive: 0.33,
+      dark: 0.34
+    };
+  }
+  
+  // Pastikan confidence ada
+  if (dataToProcess.confidence === undefined || dataToProcess.confidence === null) {
+    console.log("No confidence in API response, setting from highest probability");
+    // Ambil nilai probabilitas tertinggi untuk confidence jika tidak ada
+    dataToProcess.confidence = Math.max(...Object.values(dataToProcess.probabilities));
+  }
+  
+  // Pastikan ada prediction atau class
+  if (!dataToProcess.prediction && !dataToProcess.class) {
+    console.log("No prediction/class in API response, setting from highest probability");
+    let highestType = "light";
+    let highestValue = 0;
+    
+    for (const [type, value] of Object.entries(dataToProcess.probabilities)) {
+      if (value > highestValue) {
+        highestValue = value;
+        highestType = type;
+      }
+    }
+    
+    dataToProcess.prediction = highestType;
+  }
+  
+  // Log hasil akhir data yang akan diproses
+  console.log("Final processed data:", dataToProcess);
+  
+  // Jika respons memiliki struktur nested dengan data field, perbarui itu
+  if (response.data.data && typeof response.data.data === 'object') {
+    response.data.data = dataToProcess;
+  } else {
+    // Jika tidak, overwrite respons asli
+    response.data = dataToProcess;
+  }
+  
+  return response;
 
   return { ...response, data };
 };

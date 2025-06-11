@@ -154,38 +154,43 @@ export default {
       this.error = null;
       this.isLoading = false;
       console.log("Reset dilakukan, semua hasil klasifikasi dihapus");
-    },
-    
-    async handleImageUpload(formData) {
+    },      async handleImageUpload(formData) {
       this.isLoading = true;
       this.error = null;
-      this.result = null;      try {
+      this.result = null;
+      
+      try {
         const response = await apiService.uploadImage(formData);
 
         // Process the response based on the new structure
-        if (response.data) {
+        if (response && response.data) {
           console.log("API Response:", response.data);
 
-          // Struktur default jika ada data yang tidak tersedia
-          const defaultSkinClass = "light"; // Default ke salah satu kategori yang ada
-          const defaultConfidence = 0.8; // Default confidence level
-          const defaultProbabilities = {
-            light: 0.8,
-            olive: 0.15,
-            dark: 0.05
-          };
-
+          const previewUrl = URL.createObjectURL(formData.get("image"));
+          
+          // Ekstrak data dari struktur respons API yang benar
+          // Respons API kemungkinan memiliki struktur: { status, message, data: { prediction, confidence, probabilities } }
+          const apiData = response.data.data || response.data;
+          
+          // Untuk debug
+          console.log("API data structure:", apiData);
+          console.log("API prediction:", apiData.prediction || apiData.class);
+          console.log("API confidence:", apiData.confidence);
+          console.log("API probabilities:", apiData.probabilities);
+          
+          // Gunakan struktur data yang sesuai dengan response API
           this.result = {
-            // Use the uploaded image from your form as the preview
-            imagePreview: URL.createObjectURL(formData.get("image")),
-            // Map the new response format with fallbacks jika data tidak lengkap
-            skinClass: response.data.class || defaultSkinClass,
-            confidence: response.data.confidence || defaultConfidence,
-            probabilities: response.data.probabilities || defaultProbabilities,
+            imagePreview: previewUrl,
+            skinClass: apiData.prediction || apiData.class,
+            confidence: apiData.confidence || 0,
+            probabilities: apiData.probabilities || {},
+            // Tambahkan data raw untuk debugging
+            rawApiData: apiData
           };
           
           // Debugging log
           console.log("Processed Result:", this.result);
+          console.log(`Analyzing probabilities: dark=${this.result.probabilities?.dark || 0}, olive=${this.result.probabilities?.olive || 0}, light=${this.result.probabilities?.light || 0}`);
         }
       } catch (error) {
         this.error = error.message || "Failed to upload image";
