@@ -6,7 +6,7 @@
       </div>
 
       <div class="card-body">
-        <transition name="fade" mode="out-in">
+        <!-- No transition -->
           <div v-if="loading" class="loading">
             <div class="loading-spinner"></div>
             <p class="processing-text">Analyzing your image...</p>
@@ -25,8 +25,7 @@
                 <li>Coba muat ulang halaman dan unggah kembali gambar</li>
               </ul>
             </div>
-          </div>
-          <div v-else-if="result" class="results-content">
+          </div>          <div v-else-if="result" class="results-content">
             <div class="result-image-container">
               <img
                 :src="result.imagePreview"
@@ -35,20 +34,26 @@
             </div>
 
             <div class="result-details">
-              <h3>Hasil Analisis:</h3>              <div class="skin-tone-result">
+              <h3>Hasil Analisis:</h3>
+              <div class="skin-tone-result">
                 <div :class="['main-result', result.skinClass || getHighestProbabilitySkinType()]">
                   <div class="skin-tone-icon" :class="result.skinClass || getHighestProbabilitySkinType()">
                     <span class="icon-indicator"></span>
                   </div>
                   <div class="skin-tone-label">
                     {{ getSkinToneLabel(result.skinClass || getHighestProbabilitySkinType()) }}
-                  </div>                  <div class="confidence">
-                    Confidence:
-                    {{ result.confidence ? ((result.confidence) * 100).toFixed(0) : 0 }}%
                   </div>
-                  <button class="recommendation-button" @click="showRecommendations = true" v-if="result && !showRecommendations">
-                    Lihat Rekomendasi Warna
-                  </button>
+                  <div class="confidence">
+                    Confidence:
+                    {{ result.confidence ? ((result.confidence) * 100).toFixed(0) : 0 }}%                  </div>                  <div class="button-container">
+                    <button 
+                      class="recommendation-button" 
+                      @click="showRecommendations = true" 
+                      v-if="result && !showRecommendations"
+                      aria-label="Lihat rekomendasi warna">
+                      Lihat Rekomendasi Warna
+                    </button>
+                  </div>
                 </div>                <div v-if="showRecommendations" 
                      :class="['recommendations-section', result.skinClass || getHighestProbabilitySkinType()]">
                   <div class="recommendation-header">
@@ -87,13 +92,10 @@
                 </div>
               </div>
             </div>
-          </div>
-
-          <div v-else class="empty-state">
+          </div>          <div v-else class="empty-state">
             <i class="fas fa-image"></i>
             <p>Upload an image to see the results</p>
           </div>
-        </transition>
       </div>
     </div>
   </div>
@@ -279,19 +281,22 @@ export default {
   height: 100%;
 }
 
-.card {
+.card {  
   border-radius: 25px;
-  box-shadow: 0 15px 35px rgba(244, 122, 158, 0.1);
+  box-shadow: 0 4px 8px rgba(244, 122, 158, 0.1);
   overflow: hidden;
   background-color: white;
-  transition: all 0.4s ease;
   height: 100%;
   border: 1px solid rgba(244, 122, 158, 0.1);
+  /* Override global hover effects */
+  transition: none;
+  transform: none;
 }
 
+/* Override global hover effects */
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(244, 122, 158, 0.15);
+  transform: none;
+  box-shadow: 0 4px 8px rgba(244, 122, 158, 0.1);
 }
 
 .card-header {
@@ -350,13 +355,7 @@ export default {
   border-radius: 15px;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 10px 20px rgba(244, 122, 158, 0.1);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-.result-image-container:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(244, 122, 158, 0.15);
+  box-shadow: 0 4px 8px rgba(244, 122, 158, 0.1);
 }
 
 .result-image {
@@ -388,8 +387,7 @@ export default {
     135deg,
     rgba(244, 122, 158, 0.1),
     rgba(246, 189, 217, 0.1)
-  );
-  padding: 8px 15px;
+  );  padding: 8px 15px;
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -397,17 +395,6 @@ export default {
   color: #f47a9e;
   font-size: 0.9rem;
   border: 1px solid rgba(244, 122, 158, 0.2);
-  transition: all 0.3s ease;
-}
-
-.label-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(244, 122, 158, 0.1);
-  background: linear-gradient(
-    135deg,
-    rgba(244, 122, 158, 0.15),
-    rgba(246, 189, 217, 0.15)
-  );
 }
 
 .label-item i {
@@ -443,15 +430,7 @@ export default {
   }
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
+/* No transition effects */
 
 .error-state {
   display: flex;
@@ -506,12 +485,11 @@ export default {
   width: 100%;
 }
 
-.main-result {
+.main-result {  
   margin-bottom: 1.5rem;
   text-align: center;
   padding: 15px;
   border-radius: 15px;
-  transition: all 0.3s ease;
 }
 
 /* Specific styling for each skin tone result type */
@@ -542,17 +520,17 @@ export default {
 
 .skin-tone-icon.dark {
   background: linear-gradient(135deg, #3e2723, #5d4037);
-  box-shadow: 0 5px 15px rgba(93, 64, 55, 0.4);
+  box-shadow: 0 3px 6px rgba(93, 64, 55, 0.3);
 }
 
 .skin-tone-icon.olive {
   background: linear-gradient(135deg, #556b2f, #808000);
-  box-shadow: 0 5px 15px rgba(128, 128, 0, 0.4);
+  box-shadow: 0 3px 6px rgba(128, 128, 0, 0.3);
 }
 
 .skin-tone-icon.light {
   background: linear-gradient(135deg, #ffb74d, #ffcc80);
-  box-shadow: 0 5px 15px rgba(255, 183, 77, 0.4);
+  box-shadow: 0 3px 6px rgba(255, 183, 77, 0.3);
 }
 
 .icon-indicator {
@@ -655,35 +633,41 @@ export default {
 }
 
 .recommendation-button {
-  margin-top: 15px;
-  padding: 12px 25px;
-  background: linear-gradient(135deg, #f47a9e, #f6bdd9);
+  margin-top: 20px;
+  padding: 16px 30px;
+  background: #ec9ab3;
   border: none;
-  border-radius: 25px;
+  border-radius: 50px;
   color: white;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(244, 122, 158, 0.2);
-  width: auto;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+  box-shadow: 0 2px 6px rgba(244, 122, 158, 0.2);
+  width: 260px;
+  max-width: 85%;
+  margin: 20px auto 15px;
   font-size: 1rem;
-  letter-spacing: 0.5px;
+  display: block;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-.recommendation-button:hover, .recommendation-button:active {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(244, 122, 158, 0.3);
+/* Button container for better alignment */
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 5px 0;
 }
 
-.recommendations-section {
-  margin-top: 25px;
+/* No hover or active effects */
+
+.recommendations-section {  margin-top: 25px;
   padding: 20px 15px;
   border-radius: 15px;
   text-align: center;
-  transition: all 0.3s ease;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
@@ -769,14 +753,8 @@ export default {
   align-items: flex-end;
   justify-content: center;
   position: relative;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 25px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.color-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .color-name {
@@ -823,17 +801,20 @@ export default {
     height: 90px;
     margin-bottom: 25px;
   }
-  
-  .color-name {
+    .color-name {
     font-size: 0.8rem;
     padding: 5px 8px;
-  }
-
-  .recommendation-button {
-    padding: 10px 20px;
+  }  .recommendation-button {
+    padding: 14px 24px;
     font-size: 0.95rem;
-    width: auto;
-    min-width: 200px;
+    width: 240px;
+    max-width: 90%;
+    margin: 20px auto 15px;
+  }
+  
+  .button-container {
+    justify-content: center;
+    width: 100%;
   }
 
   .recommendations-section {
@@ -885,13 +866,18 @@ export default {
   .recommendations-section {
     padding: 15px 10px 25px;
     margin-top: 15px;
+  }  .recommendation-button {
+    padding: 12px 18px;
+    font-size: 0.9rem;
+    width: 220px;
+    max-width: 90%;
+    margin: 15px auto 12px;
   }
   
-  .recommendation-button {
-    padding: 10px 15px;
-    font-size: 0.9rem;
-    width: 80%;
-    max-width: 250px;
+  .button-container {
+    justify-content: center;
+    align-items: center;
+    padding: 0 5px;
   }
   
   .recommendation-header {
