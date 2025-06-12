@@ -656,7 +656,7 @@ export default {
 
 .recommendation-button {
   margin-top: 15px;
-  padding: 10px 20px;
+  padding: 12px 25px;
   background: linear-gradient(135deg, #f47a9e, #f6bdd9);
   border: none;
   border-radius: 25px;
@@ -665,19 +665,26 @@ export default {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 5px 15px rgba(244, 122, 158, 0.2);
+  width: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
 }
 
-.recommendation-button:hover {
+.recommendation-button:hover, .recommendation-button:active {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(244, 122, 158, 0.3);
 }
 
 .recommendations-section {
-  margin-top: 20px;
-  padding: 20px;
+  margin-top: 25px;
+  padding: 20px 15px;
   border-radius: 15px;
   text-align: center;
   transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .recommendations-section.dark {
@@ -701,6 +708,8 @@ export default {
   justify-content: center;
   margin-bottom: 15px;
   gap: 10px;
+  flex-wrap: wrap;
+  padding: 0 5px;
 }
 
 .skin-tone-mini-icon {
@@ -724,6 +733,9 @@ export default {
 .recommendations-section h4 {
   margin: 0;
   font-size: 1.1rem;
+  text-align: center;
+  line-height: 1.4;
+  width: 100%;
 }
 
 .recommendations-section.dark h4 {
@@ -743,34 +755,53 @@ export default {
   justify-content: center;
   gap: 15px;
   flex-wrap: wrap;
+  margin: 20px auto 10px;
+  max-width: 100%;
+  padding: 0 5px;
 }
 
 .color-item {
-  width: 100px;
+  width: calc(50% - 15px);
+  max-width: 120px;
   height: 100px;
-  border-radius: 15px;
+  border-radius: 12px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   position: relative;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  margin-bottom: 25px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.color-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .color-name {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 5px 10px;
-  border-radius: 12px;
-  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 6px 8px;
+  border-radius: 10px;
+  font-size: 0.85rem;
   color: #333;
   position: absolute;
-  bottom: 8px;
-  white-space: nowrap;
+  bottom: -15px;
+  width: 100%;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  white-space: normal;
+  line-height: 1.2;
+  min-height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @media (max-width: 768px) {
   .card-body {
-    padding: 20px;
+    padding: 20px 15px;
   }
 
   .result-details h3 {
@@ -781,17 +812,98 @@ export default {
     font-size: 0.85rem;
     padding: 6px 12px;
   }
+  
+  .color-recommendations {
+    gap: 15px;
+    padding: 0;
+  }
+  
+  .color-item {
+    width: calc(50% - 10px);
+    height: 90px;
+    margin-bottom: 25px;
+  }
+  
+  .color-name {
+    font-size: 0.8rem;
+    padding: 5px 8px;
+  }
+
+  .recommendation-button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    width: auto;
+    min-width: 200px;
+  }
+
+  .recommendations-section {
+    padding: 20px 12px 25px;
+  }
 
   .empty-state i {
     font-size: 2.5rem;
   }
-
+  
   .empty-state p {
     font-size: 1rem;
   }
+  
+  .skin-tone-label {
+    font-size: 1.6rem;
+  }
+  
+  .confidence {
+    font-size: 1rem;
+  }
+}
 
+@media (max-width: 480px) {
+  .card-body {
+    padding: 15px 12px;
+  }
+
+  .color-recommendations {
+    gap: 12px;
+    margin: 15px auto 5px;
+  }
+  
   .color-item {
-    flex: 1 1 calc(50% - 10px);
+    width: calc(50% - 8px);
+    height: 80px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+  }
+  
+  .color-name {
+    font-size: 0.75rem;
+    bottom: -12px;
+    width: 95%;
+    border-radius: 8px;
+    padding: 4px 6px;
+  }
+  
+  .recommendations-section {
+    padding: 15px 10px 25px;
+    margin-top: 15px;
+  }
+  
+  .recommendation-button {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    width: 80%;
+    max-width: 250px;
+  }
+  
+  .recommendation-header {
+    margin-bottom: 12px;
+  }
+  
+  .recommendation-header h4 {
+    font-size: 1rem;
+  }
+  
+  .skin-tone-label {
+    font-size: 1.4rem;
   }
 }
 </style>
