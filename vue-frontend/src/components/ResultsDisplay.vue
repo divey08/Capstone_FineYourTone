@@ -657,6 +657,7 @@ export default {
 .button-container {
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
   margin: 5px 0;
 }
@@ -808,8 +809,12 @@ export default {
     font-size: 0.95rem;
     width: 240px;
     max-width: 90%;
-    margin-top: 20px;
-    margin-bottom: 15px;
+    margin: 20px auto 15px;
+  }
+  
+  .button-container {
+    justify-content: center;
+    width: 100%;
   }
 
   .recommendations-section {
@@ -866,8 +871,13 @@ export default {
     font-size: 0.9rem;
     width: 220px;
     max-width: 90%;
-    margin-top: 15px;
-    margin-bottom: 12px;
+    margin: 15px auto 12px;
+  }
+  
+  .button-container {
+    justify-content: center;
+    align-items: center;
+    padding: 0 5px;
   }
   
   .recommendation-header {
