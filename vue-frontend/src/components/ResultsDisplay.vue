@@ -25,8 +25,7 @@
                 <li>Coba muat ulang halaman dan unggah kembali gambar</li>
               </ul>
             </div>
-          </div>
-          <div v-else-if="result" class="results-content">
+          </div>          <div v-else-if="result" class="results-content">
             <div class="result-image-container">
               <img
                 :src="result.imagePreview"
@@ -35,18 +34,23 @@
             </div>
 
             <div class="result-details">
-              <h3>Hasil Analisis:</h3>              <div class="skin-tone-result">
+              <h3>Hasil Analisis:</h3>
+              <div class="skin-tone-result">
                 <div :class="['main-result', result.skinClass || getHighestProbabilitySkinType()]">
                   <div class="skin-tone-icon" :class="result.skinClass || getHighestProbabilitySkinType()">
                     <span class="icon-indicator"></span>
                   </div>
                   <div class="skin-tone-label">
                     {{ getSkinToneLabel(result.skinClass || getHighestProbabilitySkinType()) }}
-                  </div>                  <div class="confidence">
+                  </div>
+                  <div class="confidence">
                     Confidence:
                     {{ result.confidence ? ((result.confidence) * 100).toFixed(0) : 0 }}%
-                  </div>
-                  <button class="recommendation-button" @click="showRecommendations = true" v-if="result && !showRecommendations">
+                  </div>                  <button 
+                    class="recommendation-button" 
+                    @click="showRecommendations = true" 
+                    v-if="result && !showRecommendations"
+                    aria-label="Lihat rekomendasi warna">
                     Lihat Rekomendasi Warna
                   </button>
                 </div>                <div v-if="showRecommendations" 
@@ -655,27 +659,63 @@ export default {
 }
 
 .recommendation-button {
-  margin-top: 15px;
-  padding: 12px 25px;
+  margin-top: 20px;
+  padding: 14px 30px;
   background: linear-gradient(135deg, #f47a9e, #f6bdd9);
   border: none;
-  border-radius: 25px;
+  border-radius: 30px;
   color: white;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 5px 15px rgba(244, 122, 158, 0.2);
   width: auto;
+  min-width: 200px;
+  max-width: 80%;
   display: block;
   margin-left: auto;
   margin-right: auto;
   font-size: 1rem;
   letter-spacing: 0.5px;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+  animation: buttonPulse 2s infinite ease-in-out;
+}
+
+.recommendation-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.7s;
+}
+
+.recommendation-button:hover::after {
+  left: 100%;
+}
+
+@keyframes buttonPulse {
+  0% { box-shadow: 0 5px 15px rgba(244, 122, 158, 0.2); }
+  50% { box-shadow: 0 5px 20px rgba(244, 122, 158, 0.4); }
+  100% { box-shadow: 0 5px 15px rgba(244, 122, 158, 0.2); }
 }
 
 .recommendation-button:hover, .recommendation-button:active {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(244, 122, 158, 0.3);
+  background: linear-gradient(135deg, #ff5c95, #f6bdd9);
+}
+
+.recommendation-button:active {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
+  background: linear-gradient(135deg, #ff5c95, #f793c2);
+  box-shadow: 0 2px 8px rgba(244, 122, 158, 0.2);
 }
 
 .recommendations-section {
@@ -828,12 +868,14 @@ export default {
     font-size: 0.8rem;
     padding: 5px 8px;
   }
-
   .recommendation-button {
-    padding: 10px 20px;
+    padding: 12px 20px;
     font-size: 0.95rem;
-    width: auto;
-    min-width: 200px;
+    min-width: 220px;
+    max-width: 85%;
+    border-radius: 25px;
+    margin-top: 15px;
+    margin-bottom: 5px;
   }
 
   .recommendations-section {
@@ -886,12 +928,24 @@ export default {
     padding: 15px 10px 25px;
     margin-top: 15px;
   }
-  
-  .recommendation-button {
-    padding: 10px 15px;
+    .recommendation-button {
+    padding: 12px 18px;
     font-size: 0.9rem;
-    width: 80%;
-    max-width: 250px;
+    width: 85%;
+    max-width: 240px;
+    min-width: 180px;
+    border-radius: 24px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    box-shadow: 0 4px 12px rgba(244, 122, 158, 0.25);
+  }
+  
+  /* Improve button touch feedback */
+  .recommendation-button:active {
+    transform: scale(0.97);
+    transition: transform 0.1s ease;
+    background: linear-gradient(135deg, #ff5c95, #f793c2);
+    box-shadow: 0 2px 8px rgba(244, 122, 158, 0.2);
   }
   
   .recommendation-header {
