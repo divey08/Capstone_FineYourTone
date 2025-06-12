@@ -673,11 +673,12 @@ export default {
 }
 
 .recommendations-section {
-  margin-top: 20px;
-  padding: 20px;
+  margin-top: 25px;
+  padding: 20px 15px;
   border-radius: 15px;
   text-align: center;
   transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .recommendations-section.dark {
@@ -743,29 +744,45 @@ export default {
   justify-content: center;
   gap: 15px;
   flex-wrap: wrap;
+  margin: 15px auto;
+  max-width: 100%;
 }
 
 .color-item {
-  width: 100px;
-  height: 100px;
+  width: calc(50% - 15px);
+  max-width: 120px;
+  height: 120px;
   border-radius: 15px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   position: relative;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.color-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .color-name {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 6px 10px;
   border-radius: 12px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #333;
   position: absolute;
-  bottom: 8px;
-  white-space: nowrap;
+  bottom: -10px;
+  width: 90%;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  white-space: normal;
+  line-height: 1.2;
+  max-height: 40px;
+  overflow: hidden;
 }
 
 @media (max-width: 768px) {
@@ -781,17 +798,49 @@ export default {
     font-size: 0.85rem;
     padding: 6px 12px;
   }
+  
+  .color-recommendations {
+    gap: 12px;
+  }
+  
+  .color-item {
+    width: calc(50% - 10px);
+    height: 110px;
+    margin-bottom: 20px;
+  }
+  
+  .color-name {
+    font-size: 0.8rem;
+    padding: 5px 8px;
+  }
 
   .empty-state i {
     font-size: 2.5rem;
   }
-
   .empty-state p {
     font-size: 1rem;
   }
+}
 
+@media (max-width: 480px) {
+  .color-recommendations {
+    gap: 10px;
+  }
+  
   .color-item {
-    flex: 1 1 calc(50% - 10px);
+    width: calc(50% - 8px);
+    height: 100px;
+    margin-bottom: 18px;
+  }
+  
+  .color-name {
+    font-size: 0.75rem;
+    bottom: -8px;
+    width: 95%;
+  }
+    .recommendations-section {
+    padding: 15px 10px;
+    margin-top: 15px;
   }
 }
 </style>
