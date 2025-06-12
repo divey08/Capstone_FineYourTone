@@ -3,7 +3,7 @@
     :class="{ 'scrolled': scrolled }"
   >    
     <div class="container-fluid header-container">
-      <router-link to="/" class="logo" data-aos="fade-right">
+      <router-link to="/logotrans.png" class="logo" data-aos="fade-right">
         <h1><span class="gradient-text">FineYour</span>Tone</h1>
       </router-link>
       
